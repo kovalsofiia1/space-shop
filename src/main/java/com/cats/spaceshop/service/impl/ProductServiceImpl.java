@@ -1,6 +1,6 @@
 package com.cats.spaceshop.service.impl;
 
-import com.cats.spaceshop.dto.ApiResponse;
+import com.cats.spaceshop.dto.MyApiResponse;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import com.cats.spaceshop.service.ProductService;
@@ -153,39 +153,52 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id)));
     }
 
+//    @Override
+//    public MyApiResponse<String> save(ProductCreateDto productCreateDto) {
+//        try {
+//            ProductDetailsDto productDetails = productMapper.toEntity(productCreateDto);
+//            products.add(productDetails);
+//            return new MyApiResponse<>(true, "Product created successfully!", null);
+//        } catch (Exception e) {
+//            return new MyApiResponse<>(false, "Failed to create product: " + e.getMessage(), null);
+//        }
+//    }
+
     @Override
-    public ApiResponse<String> save(ProductCreateDto productCreateDto) {
+    public MyApiResponse<String> save(ProductCreateDto productCreateDto) {
         try {
             ProductDetailsDto productDetails = productMapper.toEntity(productCreateDto);
             products.add(productDetails);
-            return new ApiResponse<>(true, "Product created successfully!", null);
+            return new MyApiResponse<>(true, "Product created successfully!", null);
         } catch (Exception e) {
-            return new ApiResponse<>(false, "Failed to create product: " + e.getMessage(), null);
+            // Log the exception details
+            System.err.println("Error creating product: " + e.getMessage());
+            return new MyApiResponse<>(false, "Failed to create product: " + e.getMessage(), null);
         }
     }
 
     @Override
-    public ApiResponse<String> update(ProductDetailsDto product) {
+    public MyApiResponse<String> update(ProductDetailsDto product) {
         if (product == null || product.getProductId() == null) {
-            return new ApiResponse<>(false, "Invalid product data", null);
+            return new MyApiResponse<>(false, "Invalid product data", null);
         }
         for (int i = 0; i < products.size(); i++) {
             if (products.get(i).getProductId().equals(product.getProductId())) {
                 products.set(i, product);
-                return new ApiResponse<>(true, "Product updated successfully", null);
+                return new MyApiResponse<>(true, "Product updated successfully", null);
             }
         }
         throw new ProductNotFoundException("Product not found for update: " + product.getProductId());
     }
 
     @Override
-    public ApiResponse<String> deleteById(UUID productId) {
+    public MyApiResponse<String> deleteById(UUID productId) {
         boolean removed = products.removeIf(product -> product.getProductId().equals(productId));
 
         if (removed) {
-            return new ApiResponse<>(true, "Product deleted successfully", null);
+            return new MyApiResponse<>(true, "Product deleted successfully", null);
         } else {
-            return new ApiResponse<>(false, "Product with ID not found", null);
+            return new MyApiResponse<>(false, "Product with ID not found", null);
         }
     }
 

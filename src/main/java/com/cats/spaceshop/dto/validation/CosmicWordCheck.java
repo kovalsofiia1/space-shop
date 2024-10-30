@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CosmicWordCheck {
-    String message() default "The name must contain a cosmic term like 'star', 'galaxy', or 'comet'";
+    String message() default "The name must contain a cosmic term like 'star', 'galaxy', 'comet', etc.";
 
     Class<?>[] groups() default {};
 

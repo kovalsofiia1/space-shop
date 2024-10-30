@@ -2,6 +2,7 @@ package com.cats.spaceshop.dto.product;
 
 import com.cats.spaceshop.common.ExtendedValidation;
 import com.cats.spaceshop.dto.validation.CosmicWordCheck;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -23,6 +24,7 @@ public class ProductDetailsDto {
     @NotNull(message = "Product ID is mandatory")
     UUID productId;
 
+    @Schema(description = "Product name must contain a cosmic term like 'star', 'galaxy', 'comet', etc.")
     @NotBlank(message = "Product name is mandatory")
     @Size(max = 100, message = "Product name cannot exceed 100 characters")
     @CosmicWordCheck

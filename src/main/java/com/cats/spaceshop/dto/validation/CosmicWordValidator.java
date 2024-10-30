@@ -14,7 +14,7 @@ public class CosmicWordValidator implements ConstraintValidator<CosmicWordCheck,
             "universe", "blackhole", "constellation", "satellite",
             "spaceship", "rocket", "spacesuit", "meteorite", "eclipse",
             "starlight", "wormhole", "interstellar", "astronaut",
-            "telescope", "milkyway", "exoplanet", "solar", "lunar"
+            "telescope", "milkyway", "exoplanet", "solar", "lunar", "space", "ship"
     );
     @Override
     public void initialize(CosmicWordCheck constraintAnnotation) {}

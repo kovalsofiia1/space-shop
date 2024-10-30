@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiResponse<T> {
+public class MyApiResponse<T> {
     private boolean success;
     private T data;
     private String message;

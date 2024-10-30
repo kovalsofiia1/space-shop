@@ -1,5 +1,7 @@
 package com.cats.spaceshop.service.impl;
 
+import com.cats.spaceshop.dto.category.CategoryCreateDto;
+import com.cats.spaceshop.service.mapper.CategoryMapper;
 import org.springframework.stereotype.Service;
 import com.cats.spaceshop.service.CategoryService;
 import com.cats.spaceshop.dto.category.CategoryDto;
@@ -12,7 +14,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final List<CategoryDto> categories = new ArrayList<>();
 
-    public CategoryServiceImpl() {
+    private final CategoryMapper categoryMapper;
+    public CategoryServiceImpl(CategoryMapper categoryMapper) {
+        this.categoryMapper = categoryMapper;
+        initializeCategories();
+
+    }
+
+    private void initializeCategories(){
         categories.add(CategoryDto.builder()
                 .categoryId("1")
                 .name("Space Toys")
@@ -51,8 +60,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void save(CategoryDto categoryDto) {
-        categories.add(categoryDto);
+    public void save(CategoryCreateDto categoryCreateDto) {
+        categories.add(categoryMapper.toCategoryDto(categoryCreateDto));
     }
 
     @Override

@@ -2,23 +2,17 @@ package com.cats.spaceshop.service.mapper;
 
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 import java.util.UUID;
 
-@Component
-public class ProductMapper {
-    public ProductDetailsDto toEntity(ProductCreateDto productCreateDto) {
-        ProductDetailsDto productDetails = ProductDetailsDto.builder()
-                .productId(UUID.randomUUID()) // Generate a new UUID for the productId
-                .name(productCreateDto.getName())
-                .description(productCreateDto.getDescription())
-                .categoryId(productCreateDto.getCategoryId())
-                .price(productCreateDto.getPrice())
-                .stockQuantity(productCreateDto.getStockQuantity())
-                .sku(productCreateDto.getSku()) // This can be set or left null if optional
-                .build();
+@Mapper(componentModel = "spring")
+public interface ProductMapper {
+    ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
-        return productDetails;
-    }
+    // Map ProductCreateDto to ProductDetailsDto and generate productId
+    @Mapping(target = "productId", expression = "java(java.util.UUID.randomUUID())") // Generate ID during mapping
+    ProductDetailsDto toEntity(ProductCreateDto productCreateDto);
 }
