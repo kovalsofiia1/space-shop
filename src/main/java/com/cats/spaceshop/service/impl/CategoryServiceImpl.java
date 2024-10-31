@@ -1,5 +1,6 @@
 package com.cats.spaceshop.service.impl;
 
+import com.cats.spaceshop.domain.category.Category;
 import com.cats.spaceshop.dto.category.CategoryCreateDto;
 import com.cats.spaceshop.service.mapper.CategoryMapper;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import java.util.Optional;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    private final List<CategoryDto> categories = new ArrayList<>();
+    private final List<Category> categories = new ArrayList<>();
 
     private final CategoryMapper categoryMapper;
     public CategoryServiceImpl(CategoryMapper categoryMapper) {
@@ -22,26 +23,26 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private void initializeCategories(){
-        categories.add(CategoryDto.builder()
-                .categoryId("1")
+        categories.add(Category.builder()
+                .id("1")
                 .name("Space Toys")
                 .description("Toys for cats who love space adventures.")
                 .build());
 
-        categories.add(CategoryDto.builder()
-                .categoryId("2")
+        categories.add(Category.builder()
+                .id("2")
                 .name("Galactic Treats")
                 .description("Delicious treats for your space-loving cats.")
                 .build());
 
-        categories.add(CategoryDto.builder()
-                .categoryId("3")
+        categories.add(Category.builder()
+                .id("3")
                 .name("Futuristic Scratching Posts")
                 .description("Scratching posts designed for cats in the future.")
                 .build());
 
-        categories.add(CategoryDto.builder()
-                .categoryId("4")
+        categories.add(Category.builder()
+                .id("4")
                 .name("Intergalactic Catnip")
                 .description("Catnip grown in zero gravity for maximum fun.")
                 .build());
@@ -49,29 +50,30 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> findAll() {
-        return new ArrayList<>(categories);
+        return new ArrayList<>(categoryMapper.toCategoryDtoList(categories));
     }
 
     @Override
     public Optional<CategoryDto> findById(String categoryId) {
         return categories.stream()
-                .filter(category -> category.getCategoryId().equals(categoryId))
-                .findFirst();
+                .filter(category -> category.getId().equals(categoryId))
+                .findFirst()
+                .map(categoryMapper::toCategoryDto);
     }
 
     @Override
     public void save(CategoryCreateDto categoryCreateDto) {
-        categories.add(categoryMapper.toCategoryDto(categoryCreateDto));
+        categories.add(categoryMapper.toCategory(categoryCreateDto));
     }
 
     @Override
     public void update(CategoryDto categoryDto) {
         deleteById(categoryDto.getCategoryId());
-        categories.add(categoryDto);
+        categories.add(categoryMapper.toCategory(categoryDto));
     }
 
     @Override
     public void deleteById(String categoryId) {
-        categories.removeIf(category -> category.getCategoryId().equals(categoryId));
+        categories.removeIf(category -> category.getId().equals(categoryId));
     }
 }

@@ -1,5 +1,6 @@
 package com.cats.spaceshop.service.impl;
 
+import com.cats.spaceshop.domain.product.Product;
 import com.cats.spaceshop.dto.MyApiResponse;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductMapper productMapper;
-    private List<ProductDetailsDto> products = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
 
     private static final UUID GALACTIC_CATNIP_ID = UUID.fromString("6e665f4e-e09a-4bde-80c2-8c62f949a75d");
     private static final UUID STELLAR_LASER_POINTER_ID = UUID.fromString("89227cb7-2635-4ef2-bbba-d5ecf9b19bc2");
@@ -39,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     private void initializeProducts() {
-        products.add(ProductDetailsDto.builder()
+        products.add(Product.builder()
                 .productId(GALACTIC_CATNIP_ID)
                 .name("Galactic Catnip Whiskers")
                 .description("A 100% organic catnip harvested from the lush fields of Planet Felinea.")
@@ -49,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
                 .categoryId("1")
                 .build());
 
-        products.add(ProductDetailsDto.builder()
+        products.add(Product.builder()
                 .productId(STELLAR_LASER_POINTER_ID)
                 .name("Stellar Laser Pointer")
                 .description("Laser pointer with starlight precision, ideal for space training exercises.")
@@ -59,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
                 .categoryId("1")
                 .build());
 
-        products.add(ProductDetailsDto.builder()
+        products.add(Product.builder()
                 .productId(NEBULA_SCRATCHER_ID)
                 .name("Nebula Scratcher Post")
                 .description("A cosmic scratcher post made from asteroid fibers to satisfy intergalactic claw needs.")
@@ -69,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
                 .categoryId("1")
                 .build());
 
-        products.add(ProductDetailsDto.builder()
+        products.add(Product.builder()
                 .productId(COMET_FEATHER_WAND_ID)
                 .name("Comet Feather Wand")
                 .description("Feather wand with comet-like movement for boundless feline fun.")
@@ -79,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
                 .categoryId("2")
                 .build());
 
-        products.add(ProductDetailsDto.builder()
+        products.add(Product.builder()
                 .productId(LUNAR_DUST_LITTER_ID)
                 .name("Lunar Dust Litter")
                 .description("Fine lunar dust for a zero-gravity litter experience, soft and gentle.")
@@ -89,7 +90,7 @@ public class ProductServiceImpl implements ProductService {
                 .categoryId("2")
                 .build());
 
-        products.add(ProductDetailsDto.builder()
+        products.add(Product.builder()
                 .productId(ASTRO_BED_CAPSULE_ID)
                 .name("Astro Bed Capsule")
                 .description("Comfortable and cozy bed capsule designed for deep space naps.")
@@ -99,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
                 .categoryId("2")
                 .build());
 
-        products.add(ProductDetailsDto.builder()
+        products.add(Product.builder()
                 .productId(METEOR_SNACK_PACK_ID)
                 .name("Meteor Snack Pack")
                 .description("A collection of intergalactic treats with flavors from beyond the Milky Way.")
@@ -109,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
                 .categoryId("2")
                 .build());
 
-        products.add(ProductDetailsDto.builder()
+        products.add(Product.builder()
                 .productId(SOLAR_POWERED_FOUNTAIN_ID)
                 .name("Solar Powered Water Fountain")
                 .description("Water fountain that uses solar energy from distant stars to keep your feline hydrated.")
@@ -119,7 +120,7 @@ public class ProductServiceImpl implements ProductService {
                 .categoryId("2")
                 .build());
 
-        products.add(ProductDetailsDto.builder()
+        products.add(Product.builder()
                 .productId(GALAXY_GROOMING_KIT_ID)
                 .name("Galaxy Grooming Kit")
                 .description("A grooming kit with brushes made from nebula dust to keep fur smooth and shiny.")
@@ -129,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
                 .categoryId("2")
                 .build());
 
-        products.add(ProductDetailsDto.builder()
+        products.add(Product.builder()
                 .productId(ORBIT_BALL_ID)
                 .name("Orbit Ball")
                 .description("A gravity-defying ball that keeps rolling for infinite fun in any cosmic space.")
@@ -142,33 +143,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDetailsDto> findAll() {
-        return new ArrayList<>(products);
+        return new ArrayList<ProductDetailsDto>(productMapper.toDtoList(products));
     }
 
     @Override
     public Optional<ProductDetailsDto> findById(UUID id) {
-        return Optional.ofNullable(products.stream()
+        return Optional.ofNullable(productMapper.toDtoList(products).stream()
                 .filter(product -> product.getProductId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id)));
     }
 
-//    @Override
-//    public MyApiResponse<String> save(ProductCreateDto productCreateDto) {
-//        try {
-//            ProductDetailsDto productDetails = productMapper.toEntity(productCreateDto);
-//            products.add(productDetails);
-//            return new MyApiResponse<>(true, "Product created successfully!", null);
-//        } catch (Exception e) {
-//            return new MyApiResponse<>(false, "Failed to create product: " + e.getMessage(), null);
-//        }
-//    }
-
     @Override
     public MyApiResponse<String> save(ProductCreateDto productCreateDto) {
         try {
-            ProductDetailsDto productDetails = productMapper.toEntity(productCreateDto);
-            products.add(productDetails);
+            Product product = productMapper.toEntity(productCreateDto);
+            products.add(product);
             return new MyApiResponse<>(true, "Product created successfully!", null);
         } catch (Exception e) {
             // Log the exception details
@@ -184,7 +174,7 @@ public class ProductServiceImpl implements ProductService {
         }
         for (int i = 0; i < products.size(); i++) {
             if (products.get(i).getProductId().equals(product.getProductId())) {
-                products.set(i, product);
+                products.set(i, productMapper.toEntity(product));
                 return new MyApiResponse<>(true, "Product updated successfully", null);
             }
         }
@@ -204,7 +194,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Optional<List<ProductDetailsDto>> findByCategory(String categoryId) {
-        List<ProductDetailsDto> filteredProducts = products.stream()
+        List<ProductDetailsDto> filteredProducts = productMapper.toDtoList(products)
+                .stream()
                 .filter(product -> product.getCategoryId().equals(categoryId))
                 .collect(Collectors.toList());
         return Optional.of(filteredProducts);
