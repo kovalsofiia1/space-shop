@@ -170,7 +170,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public MyApiResponse<String> update(ProductDetailsDto product) {
         if (product == null || product.getProductId() == null) {
-            return new MyApiResponse<>(false, "Invalid product data", null);
+            return new MyApiResponse<>(false, "Product ID in the request body does not match the path variable", null);
         }
         for (int i = 0; i < products.size(); i++) {
             if (products.get(i).getProductId().equals(product.getProductId())) {
