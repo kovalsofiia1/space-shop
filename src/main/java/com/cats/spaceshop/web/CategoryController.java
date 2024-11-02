@@ -1,8 +1,10 @@
 package com.cats.spaceshop.web;
 
+import com.cats.spaceshop.dto.MyApiResponse;
 import com.cats.spaceshop.dto.category.CategoryCreateDto;
 import com.cats.spaceshop.dto.category.CategoryDto;
 import com.cats.spaceshop.service.CategoryService;
+import com.cats.spaceshop.service.exception.CategoryNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -48,8 +50,8 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> getCategory(
             @Parameter(description = "Unique identifier of the category") @PathVariable String id) {
         return categoryService.findById(id)
-                .map(categoryDto -> ResponseEntity.ok(categoryDto))
-                .orElse(ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found with ID: " + id));
     }
 
     @Operation(summary = "Create a new category", description = "Create a new category with the specified details.")
@@ -59,12 +61,11 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
     })
     @PostMapping("")
-    public ResponseEntity<String> createCategory(
-            @Valid @RequestBody(description = "Details of the new category", required = true,
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryCreateDto.class)))
-            CategoryCreateDto categoryCreateDto) {
+    public ResponseEntity<MyApiResponse<String>> createCategory(
+            @Valid @org.springframework.web.bind.annotation.RequestBody CategoryCreateDto categoryCreateDto) {
         categoryService.save(categoryCreateDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Category created successfully");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new MyApiResponse<>(true, "Category created successfully", null));
     }
 
     @Operation(summary = "Update an existing category", description = "Update the details of a category by its ID.")
@@ -74,14 +75,20 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found", content = @Content)
     })
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCategory(
+    public ResponseEntity<MyApiResponse<String>> updateCategory(
             @Parameter(description = "ID of the category to update") @PathVariable String id,
-            @Valid @RequestBody(description = "Updated details of the category", required = true,
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryDto.class)))
-            CategoryDto categoryDto) {
+            @Valid @org.springframework.web.bind.annotation.RequestBody CategoryDto categoryDto) {
+
+        if (!categoryDto.getCategoryId().equals(id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MyApiResponse<>(false, "Category ID in the request body does not match the path variable", null));
+        }
+
         categoryService.update(categoryDto);
-        return ResponseEntity.ok("Category updated successfully");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new MyApiResponse<>(true, "Category updated successfully", null));
     }
+
 
     @Operation(summary = "Delete a category", description = "Delete a category by its unique ID.")
     @ApiResponses({

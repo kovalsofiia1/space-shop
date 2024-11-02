@@ -89,19 +89,16 @@ public class ProductController {
         }
     }
 
-    @Operation(summary = "Update a product", description = "Update the details of an existing product.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Product updated successfully",
-                    content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "400", description = "Bad request - ID mismatch", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Conflict in updating product", content = @Content)
-    })
     @PutMapping("/{id}")
+    @Operation(summary = "Update an existing product", description = "Update the details of a product by its ID.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Product updated successfully", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
+    })
     public ResponseEntity<MyApiResponse<String>> updateProduct(
             @Parameter(description = "ID of the product to update") @PathVariable UUID id,
-            @Valid @RequestBody(description = "Updated details of the product", required = true, content = @Content(
-                    mediaType = "application/json", schema = @Schema(implementation = ProductDetailsDto.class)))
-            ProductDetailsDto product) {
+            @Valid @org.springframework.web.bind.annotation.RequestBody ProductDetailsDto product) {
 
         if (!product.getProductId().equals(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -113,7 +110,7 @@ public class ProductController {
         if (response.isSuccess()) {
             return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 
@@ -121,7 +118,6 @@ public class ProductController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Product deleted successfully",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))),
-            @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<MyApiResponse<String>> deleteProduct(
