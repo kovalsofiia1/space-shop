@@ -15,7 +15,7 @@ public interface CategoryMapper {
 
     // Map CategoryCreateDto to Category and generate ID
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())") // Generate ID during mapping
-    Category toCategory(CategoryCreateDto categoryCreateDto);
+    Category toCreateCategory(CategoryCreateDto categoryCreateDto);
 
     @Mapping(target = "id", source = "categoryId")
     Category toCategory(CategoryDto categoryCreateDto);
@@ -26,6 +26,5 @@ public interface CategoryMapper {
     @Mapping(target = "categoryId", source = "id")
     List<CategoryDto> toCategoryDtoList(List<Category> category);
 
-    // Map Category to CategoryDto
     CategoryDto toCategoryDto(CategoryCreateDto category);
 }

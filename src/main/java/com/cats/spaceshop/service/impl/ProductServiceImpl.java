@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductMapper productMapper;
-    private List<Product> products = new ArrayList<>();
+    List<Product> products = new ArrayList<>();
 
     private static final UUID GALACTIC_CATNIP_ID = UUID.fromString("6e665f4e-e09a-4bde-80c2-8c62f949a75d");
     private static final UUID STELLAR_LASER_POINTER_ID = UUID.fromString("89227cb7-2635-4ef2-bbba-d5ecf9b19bc2");

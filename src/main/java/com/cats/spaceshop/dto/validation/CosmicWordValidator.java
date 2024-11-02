@@ -10,7 +10,7 @@ public class CosmicWordValidator implements ConstraintValidator<CosmicWordCheck,
 
     private static final List<String> COSMIC_TERMS = Arrays.asList(
             "star", "galaxy", "comet", "planet", "asteroid", "nebula",
-            "meteor", "quasar", "supernova", "orbit", "cosmos",
+            "meteor", "quasar", "supernova", "orbit", "cosmos", "galactic",
             "universe", "blackhole", "constellation", "satellite",
             "spaceship", "rocket", "spacesuit", "meteorite", "eclipse",
             "starlight", "wormhole", "interstellar", "astronaut",

@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'org.barfuin.gradle.jacocolog' version '3.1.0'
 }
 
 group = 'com.cats'
@@ -26,7 +27,19 @@ repositories {
 
 ext {
     set('snippetsDir', file("build/generated-snippets"))
+    minimumCoveragePerFile = 0.5
+    filesExcludedFromCoverage = [
+            "**/*SpaceShopApplication.*",
+            "**/config/*Configuration.*",
+            "**/domain/",
+            "**/dto/",
+            "**/common/"
+
+    ]
 }
+
+apply from: "${rootProject.projectDir}/gradle/test.gradle"
+apply from: "${rootProject.projectDir}/gradle/jacoco.gradle"
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -45,6 +58,7 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-core'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.testcontainers:postgresql'

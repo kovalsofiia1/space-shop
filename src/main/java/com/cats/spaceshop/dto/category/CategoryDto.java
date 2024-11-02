@@ -25,4 +25,5 @@ public class CategoryDto {
 
     @Size(max = 255, message = "Category description cannot exceed 255 characters")
     String description;
+
 }

@@ -80,8 +80,6 @@ public class ProductController {
     public ResponseEntity<MyApiResponse<String>> createProduct(
          @Valid @org.springframework.web.bind.annotation.RequestBody ProductCreateDto product) {
 
-        System.out.println("Received product: " + product);
-
         MyApiResponse<String> response = productService.save(product);
 
         if (response.isSuccess()) {

@@ -16,6 +16,6 @@ import java.util.UUID;
 @GroupSequence({ Order.class, ExtendedValidation.class })
 public class Order {
     UUID Id;
-    String customerId;
+    UUID customerId;
     List<OrderEntry> entriesList;
 }
