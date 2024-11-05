@@ -34,7 +34,7 @@ ext {
             "**/domain/",
             "**/dto/",
             "**/common/",
-            "**/web/exception/GlobalExceptionHandler.java"
+            "**/web/exception/*"
 
     ]
 }

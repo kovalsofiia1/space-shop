@@ -5,12 +5,9 @@ import com.cats.spaceshop.dto.category.CategoryDto;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import com.cats.spaceshop.service.ProductService;
-import com.cats.spaceshop.service.exception.CategoryNotFoundException;
 import com.cats.spaceshop.service.exception.ProductNotFoundException;
-import com.cats.spaceshop.web.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +53,7 @@ public class ProductController {
     public ResponseEntity<ProductDetailsDto> getProductById(
             @Parameter(description = "Unique identifier of the product") @PathVariable UUID id) {
         ProductDetailsDto product = productService.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
         return ResponseEntity.ok(product);
     }
 
@@ -70,7 +67,7 @@ public class ProductController {
     public ResponseEntity<List<ProductDetailsDto>> getProductByCategory(
             @Parameter(description = "Unique identifier of the category") @PathVariable String categoryId) {
         List<ProductDetailsDto> products = productService.findByCategory(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with categoryID: " + categoryId));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with categoryID: " + categoryId));
         return ResponseEntity.ok(products);
     }
 

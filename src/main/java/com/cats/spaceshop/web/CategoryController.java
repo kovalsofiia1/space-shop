@@ -85,12 +85,8 @@ public class CategoryController {
                     .body("Category ID in the request body does not match the path variable.");
         }
 
-        try {
-            CategoryDto updated = categoryService.update(categoryDto);
-            return ResponseEntity.ok(updated);
-        } catch (CategoryNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        CategoryDto updated = categoryService.update(categoryDto);
+        return ResponseEntity.ok(updated);
     }
 
 

@@ -1,11 +1,9 @@
 package com.cats.spaceshop.web;
 
-import com.cats.spaceshop.domain.product.Product;
-import com.cats.spaceshop.dto.MyApiResponse;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import com.cats.spaceshop.service.ProductService;
-import com.cats.spaceshop.web.exception.ResourceNotFoundException;
+import com.cats.spaceshop.service.exception.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -89,7 +87,7 @@ class ProductControllerTest {
     void getProductById_shouldThrowException_whenProductDoesNotExist() {
         when(productService.findById(productId)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> productController.getProductById(productId));
+        assertThrows(ProductNotFoundException.class, () -> productController.getProductById(productId));
         verify(productService, times(1)).findById(productId);
     }
 

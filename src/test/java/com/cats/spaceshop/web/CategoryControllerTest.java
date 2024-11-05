@@ -4,7 +4,6 @@ import com.cats.spaceshop.dto.category.CategoryCreateDto;
 import com.cats.spaceshop.dto.category.CategoryDto;
 import com.cats.spaceshop.service.CategoryService;
 import com.cats.spaceshop.service.exception.CategoryNotFoundException;
-import com.cats.spaceshop.web.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -116,15 +115,24 @@ class CategoryControllerTest {
 
     @Test
     void updateCategory_ReturnsNotFound_WhenCategoryDoesNotExist() {
-        String id = "1";
-        CategoryDto updatedCategory = categoryDto;
-        doThrow(new ResourceNotFoundException("Category not found")).when(categoryService).update(updatedCategory);
+        String id = "1"; // Assuming this ID should not exist
+        CategoryDto updatedCategory = CategoryDto.builder()
+                .categoryId(id)
+                .name("Astro Beds")
+                .description("Beds for cats who love stargazing.")
+                .build();
 
-        try {
+        // Ensure the service will throw an exception for this ID
+        doThrow(new CategoryNotFoundException("Category not found for update: " + id))
+                .when(categoryService).update(updatedCategory);
+
+        // Act & Assert: Expect the exception to be thrown when calling the controller
+        CategoryNotFoundException thrown = assertThrows(CategoryNotFoundException.class, () -> {
             categoryController.updateCategory(id, updatedCategory);
-        } catch (ResourceNotFoundException e) {
-            assertEquals("Category not found", e.getMessage());
-        }
+        });
+
+        // Assert the exception message
+        assertEquals("Category not found for update: " + id, thrown.getMessage());
     }
 
     @Test
@@ -141,12 +149,10 @@ class CategoryControllerTest {
     @Test
     void deleteCategory_ReturnsNotFound_WhenCategoryDoesNotExist() {
         String id = "1";
-        doThrow(new ResourceNotFoundException("Category not found")).when(categoryService).deleteById(id);
+        doThrow(new CategoryNotFoundException("Category not found")).when(categoryService).deleteById(id);
 
-        try {
+        assertThrows(CategoryNotFoundException.class, () -> {
             categoryController.deleteCategory(id);
-        } catch (ResourceNotFoundException e) {
-            assertEquals("Category not found", e.getMessage());
-        }
+        });
     }
 }
