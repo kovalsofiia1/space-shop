@@ -18,7 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Validated
@@ -61,11 +63,10 @@ public class CategoryController {
             @ApiResponse(responseCode = "400", description = "Invalid input", content = @Content)
     })
     @PostMapping("")
-    public ResponseEntity<MyApiResponse<String>> createCategory(
+    public ResponseEntity<CategoryDto> createCategory(
             @Valid @org.springframework.web.bind.annotation.RequestBody CategoryCreateDto categoryCreateDto) {
-        categoryService.save(categoryCreateDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new MyApiResponse<>(true, "Category created successfully", null));
+        CategoryDto created = categoryService.save(categoryCreateDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @Operation(summary = "Update an existing category", description = "Update the details of a category by its ID.")
@@ -75,18 +76,21 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found", content = @Content)
     })
     @PutMapping("/{id}")
-    public ResponseEntity<MyApiResponse<String>> updateCategory(
+    public ResponseEntity<?> updateCategory(
             @Parameter(description = "ID of the category to update") @PathVariable String id,
             @Valid @org.springframework.web.bind.annotation.RequestBody CategoryDto categoryDto) {
 
         if (!categoryDto.getCategoryId().equals(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new MyApiResponse<>(false, "Category ID in the request body does not match the path variable", null));
+                    .body("Category ID in the request body does not match the path variable.");
         }
 
-        categoryService.update(categoryDto);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new MyApiResponse<>(true, "Category updated successfully", null));
+        try {
+            CategoryDto updated = categoryService.update(categoryDto);
+            return ResponseEntity.ok(updated);
+        } catch (CategoryNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
 

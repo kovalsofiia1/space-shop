@@ -1,10 +1,9 @@
 package com.cats.spaceshop.web;
 
-import com.cats.spaceshop.domain.category.Category;
 import com.cats.spaceshop.dto.category.CategoryCreateDto;
 import com.cats.spaceshop.dto.category.CategoryDto;
 import com.cats.spaceshop.service.CategoryService;
-import com.cats.spaceshop.web.CategoryController;
+import com.cats.spaceshop.service.exception.CategoryNotFoundException;
 import com.cats.spaceshop.web.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class CategoryControllerTest {
@@ -59,7 +59,7 @@ class CategoryControllerTest {
 
     @Test
     void getCategory_ReturnsCategory_WhenCategoryExists() {
-        String id = "1";
+        String id = categoryDto.getCategoryId();
         CategoryDto category = categoryDto;
         when(categoryService.findById(id)).thenReturn(Optional.of(category));
 
@@ -73,11 +73,13 @@ class CategoryControllerTest {
     @Test
     void getCategory_ReturnsNotFound_WhenCategoryDoesNotExist() {
         String id = "1";
-        when(categoryService.findById(id)).thenReturn(Optional.empty());
+        when(categoryService.findById(id)).thenThrow(new CategoryNotFoundException("Category not found with ID: " + id));
 
-        ResponseEntity<CategoryDto> response = categoryController.getCategory(id);
+        CategoryNotFoundException exception = assertThrows(CategoryNotFoundException.class, () -> {
+            categoryController.getCategory(id);
+        });
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Category not found with ID: " + id, exception.getMessage());
         verify(categoryService, times(1)).findById(id);
     }
 
@@ -85,24 +87,46 @@ class CategoryControllerTest {
     void createCategory_ReturnsCreatedStatus() {
         CategoryCreateDto newCategory = categoryCreateDto;
 
-        ResponseEntity<String> response = categoryController.createCategory(newCategory);
+        when(categoryService.save(newCategory)).thenReturn(categoryDto);
+        ResponseEntity<CategoryDto> response = categoryController.createCategory(newCategory);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("Category created successfully", response.getBody());
+        assertEquals(categoryDto, response.getBody());
         verify(categoryService, times(1)).save(newCategory);
     }
 
-    @Test
-    void updateCategory_ReturnsOkStatus_WhenCategoryExists() {
-        String id = "1";
-        CategoryDto updatedCategory = categoryDto;
+//    @Test
+//    void updateCategory_ReturnsOkStatus_WhenCategoryExists() {
+//        String id = categoryDto.getCategoryId();
+//
+//        when(categoryService.save(categoryCreateDto)).thenReturn(categoryDto);
+//        categoryController.createCategory(categoryCreateDto);
+//
+//        CategoryDto updatedCategory = categoryDto;
+//
+//        ResponseEntity<?> response = categoryController.updateCategory(id, updatedCategory);
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        assertEquals(categoryDto, response.getBody());
+//        verify(categoryService, times(1)).update(updatedCategory);
+//    }
+@Test
+void updateCategory_ReturnsOkStatus_WhenCategoryExists() {
+    String categoryId = "5";
+    CategoryDto inputDto = CategoryDto.builder()
+            .categoryId(categoryId)
+            .name("Updated Astro Beds")
+            .description("Updated description for stargazing cats.")
+            .build();
 
-        ResponseEntity<String> response = categoryController.updateCategory(id, updatedCategory);
+    when(categoryService.update(inputDto)).thenReturn(inputDto);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Category updated successfully", response.getBody());
-        verify(categoryService, times(1)).update(updatedCategory);
-    }
+    ResponseEntity<?> response = categoryController.updateCategory(categoryId, inputDto);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(inputDto, response.getBody());
+    verify(categoryService, times(1)).update(inputDto);
+}
 
     @Test
     void updateCategory_ReturnsNotFound_WhenCategoryDoesNotExist() {

@@ -5,16 +5,13 @@ import com.cats.spaceshop.dto.category.CategoryCreateDto;
 import com.cats.spaceshop.dto.category.CategoryDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
-    CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
-    // Map CategoryCreateDto to Category and generate ID
-    @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())") // Generate ID during mapping
+    @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
     Category toCreateCategory(CategoryCreateDto categoryCreateDto);
 
     @Mapping(target = "id", source = "categoryId")

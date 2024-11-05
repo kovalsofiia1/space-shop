@@ -11,6 +11,7 @@ import com.cats.spaceshop.dto.category.CategoryDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -64,34 +65,58 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public  MyApiResponse<String> save(CategoryCreateDto categoryCreateDto) {
-        categories.add(categoryMapper.toCreateCategory(categoryCreateDto));
-        return new MyApiResponse<>(true, "Category created successfully!", null);
+    public CategoryDto save(CategoryCreateDto categoryCreateDto) {
+        Category category = categoryMapper.toCreateCategory(categoryCreateDto);
+        categories.add(category);
+        return categoryMapper.toCategoryDto(category);
     }
 
+//    @Override
+//    public CategoryDto update(CategoryDto categoryDto) {
+//        if (categoryDto == null || categoryDto.getCategoryId() == null) {
+//            throw new IllegalArgumentException("Invalid category data");
+//        }
+//
+//        boolean categoryExists = categories.stream()
+//                .anyMatch(category -> category.getId().equals(categoryDto.getCategoryId()));
+//
+//        if (!categoryExists) {
+//            throw new CategoryNotFoundException("Category not found for update: " + categoryDto.getCategoryId());
+//        }
+//
+//        deleteById(categoryDto.getCategoryId());
+//        categories.add(categoryMapper.toCategory(categoryDto));
+//        return categoryDto;
+//    }
+
     @Override
-    public MyApiResponse<String> update(CategoryDto categoryDto) {
+    public CategoryDto update(CategoryDto categoryDto) {
         if (categoryDto == null || categoryDto.getCategoryId() == null) {
-            return new MyApiResponse<>(false, "Invalid category data", null);
+            throw new IllegalArgumentException("Invalid category data");
         }
 
-        // Check if the category exists before attempting to update
-        boolean categoryExists = categories.stream()
-                .anyMatch(category -> category.getId().equals(categoryDto.getCategoryId()));
+        Category existingCategory = categories.stream()
+                .filter(cat -> cat.getId().equals(categoryDto.getCategoryId()))
+                .findFirst()
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found for update: " + categoryDto.getCategoryId()));
 
-        if (!categoryExists) {
-            throw new CategoryNotFoundException("Category not found for update: " + categoryDto.getCategoryId());
-        }
+        Category updatedCategory = Category.builder()
+                .id(existingCategory.getId())
+                .name(categoryDto.getName() != null ? categoryDto.getName() : existingCategory.getName())
+                .description(categoryDto.getDescription() != null ? categoryDto.getDescription() : existingCategory.getDescription())
+                .build();
 
-        // Proceed with the update
-        deleteById(categoryDto.getCategoryId());
-        categories.add(categoryMapper.toCategory(categoryDto));
+        categories.remove(existingCategory);
+        categories.add(updatedCategory);
 
-        return new MyApiResponse<>(true, "Category updated successfully!", null);
+        return categoryMapper.toCategoryDto(updatedCategory);
     }
 
     @Override
     public void deleteById(String categoryId) {
-        categories.removeIf(category -> category.getId().equals(categoryId));
+        boolean removed = categories.removeIf(category -> category.getId().equals(categoryId));
+        if (!removed) {
+            throw new CategoryNotFoundException("Category not found for deletion: " + categoryId);
+        }
     }
 }

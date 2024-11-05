@@ -10,9 +10,9 @@ public interface CategoryService {
 
     Optional<CategoryDto> findById(String categoryId);
 
-    MyApiResponse<String> save(CategoryCreateDto categoryDto);
+    CategoryDto save(CategoryCreateDto categoryDto);
 
-    MyApiResponse<String> update(CategoryDto categoryDto);
+    CategoryDto update(CategoryDto categoryDto);
 
     void deleteById(String categoryId);
 }

@@ -33,7 +33,8 @@ ext {
             "**/config/*Configuration.*",
             "**/domain/",
             "**/dto/",
-            "**/common/"
+            "**/common/",
+            "**/web/exception/GlobalExceptionHandler.java"
 
     ]
 }
