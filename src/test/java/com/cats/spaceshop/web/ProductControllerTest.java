@@ -108,47 +108,56 @@ class ProductControllerTest {
 
     @Test
     void createProduct_shouldReturnCreatedStatus_whenProductCreatedSuccessfully() {
-        MyApiResponse<String> apiResponse = new MyApiResponse<>(true, "Product created", null);
-        when(productService.save(productCreateDto)).thenReturn(apiResponse);
 
-        ResponseEntity<MyApiResponse<String>> response = productController.createProduct(productCreateDto);
+        when(productService.save(productCreateDto)).thenReturn(productDetailsDto);
+
+        ResponseEntity<ProductDetailsDto> response = productController.createProduct(productCreateDto);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(apiResponse, response.getBody());
+        assertEquals(productDetailsDto, response.getBody());
         verify(productService, times(1)).save(productCreateDto);
     }
 
     @Test
     void updateProduct_shouldReturnOkStatus_whenProductUpdatedSuccessfully() {
-        MyApiResponse<String> apiResponse = new MyApiResponse<>(true, "Product updated", null);
-        when(productService.update(productDetailsDto)).thenReturn(apiResponse);
 
-        ResponseEntity<MyApiResponse<String>> response = productController.updateProduct(productDetailsDto.getProductId(), productDetailsDto);
+        UUID id = productDetailsDto.getProductId();
+
+        ProductDetailsDto updatedProductDetailsDto = ProductDetailsDto.builder()
+                .productId(id)
+                .name("Galactic Catnip Whiskers 111")
+                .description("A cosmic product.")
+                .categoryId("2")
+                .price(new BigDecimal(12.99))
+                .stockQuantity(100)
+                .sku("GCW-001")
+                .build();
+
+        when(productService.update(updatedProductDetailsDto)).thenReturn(updatedProductDetailsDto);
+
+        ResponseEntity<?> response = productController.updateProduct(updatedProductDetailsDto.getProductId(), updatedProductDetailsDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(apiResponse, response.getBody());
-        verify(productService, times(1)).update(productDetailsDto);
+        assertEquals(updatedProductDetailsDto, response.getBody());
+        verify(productService, times(1)).update(updatedProductDetailsDto);
     }
 
     @Test
     void updateProduct_shouldReturnBadRequest_whenIdMismatch() {
         UUID differentId = UUID.randomUUID();
 
-        ResponseEntity<MyApiResponse<String>> response = productController.updateProduct(differentId, productDetailsDto);
+        ResponseEntity<?> response = productController.updateProduct(differentId, productDetailsDto);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Product ID in the request body does not match the path variable", response.getBody().getData());
+        assertEquals("Product ID in the request body does not match the path variable.", response.getBody());
     }
 
     @Test
     void deleteProduct_shouldReturnOkStatus_whenProductDeletedSuccessfully() {
-        MyApiResponse<String> apiResponse = new MyApiResponse<>(true, "Product deleted", null);
-        when(productService.deleteById(productId)).thenReturn(apiResponse);
-
-        ResponseEntity<MyApiResponse<String>> response = productController.deleteProduct(productId);
+        ResponseEntity<String> response = productController.deleteProduct(productId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(apiResponse, response.getBody());
+        assertEquals("Product deleted successfully", response.getBody());
         verify(productService, times(1)).deleteById(productId);
     }
 }

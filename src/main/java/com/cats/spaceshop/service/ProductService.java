@@ -17,8 +17,8 @@ public interface ProductService {
 
     Optional<ProductDetailsDto> findById(UUID productId);
 
-    MyApiResponse<String> save(ProductCreateDto product);
-    MyApiResponse<String> update(ProductDetailsDto product);
-    MyApiResponse<String> deleteById(UUID productId);
+    ProductDetailsDto save(ProductCreateDto product);
+    ProductDetailsDto update(ProductDetailsDto product);
+    void deleteById(UUID productId);
     Optional<List<ProductDetailsDto>> findByCategory(String categoryId);
 }

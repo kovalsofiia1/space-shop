@@ -12,9 +12,7 @@ import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
-    // Map ProductCreateDto to Product entity and generate productId
     @Mapping(target = "productId", expression = "java(java.util.UUID.randomUUID())") // Generate ID during mapping
     Product toEntity(ProductCreateDto productCreateDto);
 

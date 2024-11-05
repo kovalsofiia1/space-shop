@@ -71,24 +71,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toCategoryDto(category);
     }
 
-//    @Override
-//    public CategoryDto update(CategoryDto categoryDto) {
-//        if (categoryDto == null || categoryDto.getCategoryId() == null) {
-//            throw new IllegalArgumentException("Invalid category data");
-//        }
-//
-//        boolean categoryExists = categories.stream()
-//                .anyMatch(category -> category.getId().equals(categoryDto.getCategoryId()));
-//
-//        if (!categoryExists) {
-//            throw new CategoryNotFoundException("Category not found for update: " + categoryDto.getCategoryId());
-//        }
-//
-//        deleteById(categoryDto.getCategoryId());
-//        categories.add(categoryMapper.toCategory(categoryDto));
-//        return categoryDto;
-//    }
-
     @Override
     public CategoryDto update(CategoryDto categoryDto) {
         if (categoryDto == null || categoryDto.getCategoryId() == null) {

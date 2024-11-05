@@ -5,11 +5,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.cats.spaceshop.domain.product.Product;
 import com.cats.spaceshop.dto.MyApiResponse;
+import com.cats.spaceshop.dto.category.CategoryDto;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
+import com.cats.spaceshop.service.ProductService;
 import com.cats.spaceshop.service.exception.ProductNotFoundException;
 import com.cats.spaceshop.service.mapper.ProductMapper;
-import com.cats.spaceshop.web.exception.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -61,7 +62,7 @@ class ProductServiceImplTest {
                 .build();
 
         productDetailsDto = ProductDetailsDto.builder()
-                .productId(product.getProductId())
+                .productId(UUID.fromString("a5acbe53-4caf-43cd-ab5f-f26723f327e0"))
                 .name("Galactic Catnip Whiskers")
                 .description("A cosmic product.")
                 .categoryId("1")
@@ -99,48 +100,48 @@ class ProductServiceImplTest {
 
     @Test
     public void testFindProductByIdNotFound() {
-        UUID nonExistentId = UUID.randomUUID(); // Generate a random UUID that doesn't exist
+        UUID nonExistentId = UUID.randomUUID();
 
-        assertThrows(ResourceNotFoundException.class, () -> {
+        assertThrows(ProductNotFoundException.class, () -> {
             productService.findById(nonExistentId);
         });
     }
 
     @Test
     public void testSaveProduct() {
-        when(productMapper.toEntity(any(ProductCreateDto.class))).thenReturn(product);
+        when(productMapper.toEntity(productCreateDto)).thenReturn(product);
+        when(productMapper.toDto(product)).thenReturn(productDetailsDto);
 
-        MyApiResponse<String> response = productService.save(productCreateDto);
+        ProductDetailsDto response = productService.save(productCreateDto);
 
-        assertTrue(response.isSuccess());
-        assertEquals("Product created successfully!", response.getData());
+        assertNotNull(response);
+        assertEquals(productDetailsDto, response);
         verify(productMapper, times(1)).toEntity(productCreateDto);
     }
 
     @Test
     public void testUpdateProduct() {
         when(productMapper.toEntity(any(ProductDetailsDto.class))).thenReturn(product);
-        when(productMapper.toDto(product)).thenReturn(productDetailsDto);
+        when(productMapper.toDto(any(Product.class))).thenReturn(productDetailsDto);
 
-        MyApiResponse<String> response = productService.update(productDetailsDto);
+        ProductDetailsDto response = productService.update(productDetailsDto);
 
-        assertTrue(response.isSuccess());
-        assertEquals("Product updated successfully", response.getData());
-        verify(productMapper, times(1)).toEntity(productDetailsDto);
+
+        assertNotNull(response);
+        assertEquals(productDetailsDto, response);
+        verify(productMapper, times(1)).toDto(any(Product.class));
     }
 
     @Test
     public void testUpdateNonExistentProduct() {
         when(productMapper.toEntity(any(ProductCreateDto.class))).thenReturn(product);
-        productService.save(productCreateDto);  // Ensure product is saved first
-
+        productService.save(productCreateDto);
         UUID productId = product.getProductId();
-        productService.deleteById(productId); //delete saved product
+        productService.deleteById(productId);
 
         when(productMapper.toEntity(any(ProductDetailsDto.class))).thenReturn(product);
         when(productMapper.toDto(product)).thenReturn(productDetailsDto);
 
-        // attempt to update a non-existent product and expect an exception
         ProductNotFoundException thrown = assertThrows(
                 ProductNotFoundException.class,
                 () -> productService.update(productDetailsDto),
@@ -153,15 +154,14 @@ class ProductServiceImplTest {
     @Test
     public void testDeleteProductById() {
         when(productMapper.toEntity(any(ProductCreateDto.class))).thenReturn(product);
-        productService.save(productCreateDto);  // Ensure product is saved first
+        when(productService.save(productCreateDto)).thenReturn(productDetailsDto);
+        ProductDetailsDto created = productService.save(productCreateDto);
 
-        UUID productId = product.getProductId();
-        MyApiResponse<String> response = productService.deleteById(productId);
+        UUID productId = created.getProductId();
 
-        assertTrue(response.isSuccess());
-        assertEquals("Product deleted successfully", response.getData());
+        productService.deleteById(productId);
 
-        assertThrows(ResourceNotFoundException.class, () -> productService.findById(productId));
+        assertThrows(ProductNotFoundException.class, () -> productService.findById(productId));
     }
 
     @Test

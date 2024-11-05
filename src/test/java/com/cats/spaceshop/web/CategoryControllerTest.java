@@ -95,38 +95,24 @@ class CategoryControllerTest {
         verify(categoryService, times(1)).save(newCategory);
     }
 
-//    @Test
-//    void updateCategory_ReturnsOkStatus_WhenCategoryExists() {
-//        String id = categoryDto.getCategoryId();
-//
-//        when(categoryService.save(categoryCreateDto)).thenReturn(categoryDto);
-//        categoryController.createCategory(categoryCreateDto);
-//
-//        CategoryDto updatedCategory = categoryDto;
-//
-//        ResponseEntity<?> response = categoryController.updateCategory(id, updatedCategory);
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        assertEquals(categoryDto, response.getBody());
-//        verify(categoryService, times(1)).update(updatedCategory);
-//    }
-@Test
-void updateCategory_ReturnsOkStatus_WhenCategoryExists() {
-    String categoryId = "5";
-    CategoryDto inputDto = CategoryDto.builder()
-            .categoryId(categoryId)
-            .name("Updated Astro Beds")
-            .description("Updated description for stargazing cats.")
-            .build();
 
-    when(categoryService.update(inputDto)).thenReturn(inputDto);
+    @Test
+    void updateCategory_ReturnsOkStatus_WhenCategoryExists() {
+        String categoryId = "5";
+        CategoryDto inputDto = CategoryDto.builder()
+                .categoryId(categoryId)
+                .name("Updated Astro Beds")
+                .description("Updated description for stargazing cats.")
+                .build();
 
-    ResponseEntity<?> response = categoryController.updateCategory(categoryId, inputDto);
+        when(categoryService.update(inputDto)).thenReturn(inputDto);
 
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    assertEquals(inputDto, response.getBody());
-    verify(categoryService, times(1)).update(inputDto);
-}
+        ResponseEntity<?> response = categoryController.updateCategory(categoryId, inputDto);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(inputDto, response.getBody());
+        verify(categoryService, times(1)).update(inputDto);
+    }
 
     @Test
     void updateCategory_ReturnsNotFound_WhenCategoryDoesNotExist() {

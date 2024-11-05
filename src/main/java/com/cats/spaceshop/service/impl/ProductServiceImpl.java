@@ -7,7 +7,6 @@ import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import com.cats.spaceshop.service.ProductService;
 import com.cats.spaceshop.service.exception.ProductNotFoundException;
 import com.cats.spaceshop.service.mapper.ProductMapper;
-import com.cats.spaceshop.web.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -151,44 +150,47 @@ public class ProductServiceImpl implements ProductService {
         return Optional.ofNullable(productMapper.toDtoList(products).stream()
                 .filter(product -> product.getProductId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id)));
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id)));
     }
 
     @Override
-    public MyApiResponse<String> save(ProductCreateDto productCreateDto) {
-        try {
-            Product product = productMapper.toEntity(productCreateDto);
-            products.add(product);
-            return new MyApiResponse<>(true, "Product created successfully!", null);
-        } catch (Exception e) {
-            // Log the exception details
-            System.err.println("Error creating product: " + e.getMessage());
-            return new MyApiResponse<>(false, "Failed to create product: " + e.getMessage(), null);
-        }
+    public ProductDetailsDto save(ProductCreateDto productCreateDto) {
+        Product product = productMapper.toEntity(productCreateDto);
+        products.add(product);
+        return productMapper.toDto(product);
     }
 
     @Override
-    public MyApiResponse<String> update(ProductDetailsDto product) {
+    public ProductDetailsDto update(ProductDetailsDto product) {
         if (product == null || product.getProductId() == null) {
-            return new MyApiResponse<>(false, "Product ID in the request body does not match the path variable", null);
+            throw new IllegalArgumentException("Invalid product data");
         }
-        for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getProductId().equals(product.getProductId())) {
-                products.set(i, productMapper.toEntity(product));
-                return new MyApiResponse<>(true, "Product updated successfully", null);
-            }
-        }
-        throw new ProductNotFoundException("Product not found for update: " + product.getProductId());
+
+        Product existingProduct = products.stream()
+                .filter(prod -> prod.getProductId().equals(product.getProductId()))
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException("Product not found for update: " + product.getProductId()));
+
+        Product updatedProduct = Product.builder()
+                .productId(existingProduct.getProductId()) // Retain the original ID
+                .name(product.getName() != null ? product.getName() : existingProduct.getName())
+                .description(product.getDescription() != null ? product.getDescription() : existingProduct.getDescription())
+                .price(product.getPrice() != null ? product.getPrice() : existingProduct.getPrice())
+                .stockQuantity(product.getStockQuantity() != null ? product.getStockQuantity() : existingProduct.getStockQuantity())
+                .categoryId(product.getCategoryId() != null ? product.getCategoryId() : existingProduct.getCategoryId())
+                .build();
+
+        products.remove(existingProduct);
+        products.add(updatedProduct);
+
+        return productMapper.toDto(updatedProduct);
     }
 
     @Override
-    public MyApiResponse<String> deleteById(UUID productId) {
+    public void deleteById(UUID productId) {
         boolean removed = products.removeIf(product -> product.getProductId().equals(productId));
-
-        if (removed) {
-            return new MyApiResponse<>(true, "Product deleted successfully", null);
-        } else {
-            return new MyApiResponse<>(false, "Product with ID not found", null);
+        if (!removed) {
+            throw new ProductNotFoundException("Product not found for deletion: " + productId);
         }
     }
 
