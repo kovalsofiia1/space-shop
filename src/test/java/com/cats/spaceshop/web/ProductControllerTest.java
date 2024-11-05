@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.cats.spaceshop.constants.ProductTestConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -39,25 +40,8 @@ class ProductControllerTest {
     @BeforeEach
     void setUp() {
         productId = UUID.randomUUID();
-        productCreateDto = ProductCreateDto.builder()
-                .name("Galactic Catnip Whiskers")
-                .description("A cosmic product.")
-                .categoryId("1")
-                .price(new BigDecimal(12.99))
-                .stockQuantity(100)
-                .sku("GCW-001")
-                .build();
-
-
-        productDetailsDto = ProductDetailsDto.builder()
-                .productId(UUID.randomUUID())
-                .name("Galactic Catnip Whiskers")
-                .description("A cosmic product.")
-                .categoryId("1")
-                .price(new BigDecimal(12.99))
-                .stockQuantity(100)
-                .sku("GCW-001")
-                .build();
+        productCreateDto = PRODUCT_CREATE_DTO;
+        productDetailsDto = PRODUCT_DETAILS_DTO;
     }
 
     @Test

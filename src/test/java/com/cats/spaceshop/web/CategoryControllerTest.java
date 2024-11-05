@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.Optional;
+
+import static com.cats.spaceshop.constants.CategoryTestConstants.CATEGORY_CREATE_DTO;
+import static com.cats.spaceshop.constants.CategoryTestConstants.CATEGORY_DTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -32,16 +35,8 @@ class CategoryControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        categoryDto = CategoryDto.builder()
-                .categoryId("5")
-                .name("Astro Beds")
-                .description("Beds for cats who love stargazing.")
-                .build();
-
-        categoryCreateDto = CategoryCreateDto.builder()
-                .name("Astro Beds")
-                .description("Beds for cats who love stargazing.")
-                .build();
+        categoryDto = CATEGORY_DTO;
+        categoryCreateDto = CATEGORY_CREATE_DTO;
     }
 
     @Test

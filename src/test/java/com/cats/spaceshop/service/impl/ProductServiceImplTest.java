@@ -1,5 +1,6 @@
 package com.cats.spaceshop.service.impl;
 
+import static com.cats.spaceshop.constants.ProductTestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -42,36 +43,10 @@ class ProductServiceImplTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        productCreateDto = ProductCreateDto.builder()
-                .name("Galactic Catnip Whiskers")
-                .description("A cosmic product.")
-                .categoryId("1")
-                .price(new BigDecimal(12.99))
-                .stockQuantity(100)
-                .sku("GCW-001")
-                .build();
+        productCreateDto = PRODUCT_CREATE_DTO;
+        product = PRODUCT;
+        productDetailsDto = PRODUCT_DETAILS_DTO;
 
-        product = Product.builder()
-                .productId(UUID.fromString("a5acbe53-4caf-43cd-ab5f-f26723f327e0"))
-                .name("Galactic Catnip Whiskers")
-                .description("A cosmic product.")
-                .categoryId("1")
-                .price(new BigDecimal(12.99))
-                .stockQuantity(100)
-                .sku("GCW-001")
-                .build();
-
-        productDetailsDto = ProductDetailsDto.builder()
-                .productId(UUID.fromString("a5acbe53-4caf-43cd-ab5f-f26723f327e0"))
-                .name("Galactic Catnip Whiskers")
-                .description("A cosmic product.")
-                .categoryId("1")
-                .price(new BigDecimal(12.99))
-                .stockQuantity(100)
-                .sku("GCW-001")
-                .build();
-
-        // Add product to productService's in-memory list
         productService.products.add(product);
     }
     @Test
