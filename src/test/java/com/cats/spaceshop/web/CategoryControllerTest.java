@@ -110,23 +110,20 @@ class CategoryControllerTest {
 
     @Test
     void updateCategory_ReturnsNotFound_WhenCategoryDoesNotExist() {
-        String id = "1"; // Assuming this ID should not exist
+        String id = "1";
         CategoryDto updatedCategory = CategoryDto.builder()
                 .categoryId(id)
                 .name("Astro Beds")
                 .description("Beds for cats who love stargazing.")
                 .build();
 
-        // Ensure the service will throw an exception for this ID
         doThrow(new CategoryNotFoundException("Category not found for update: " + id))
                 .when(categoryService).update(updatedCategory);
 
-        // Act & Assert: Expect the exception to be thrown when calling the controller
         CategoryNotFoundException thrown = assertThrows(CategoryNotFoundException.class, () -> {
             categoryController.updateCategory(id, updatedCategory);
         });
 
-        // Assert the exception message
         assertEquals("Category not found for update: " + id, thrown.getMessage());
     }
 

@@ -12,7 +12,7 @@ class CosmicWordValidatorTest {
     @BeforeEach
     void setUp() {
         validator = new CosmicWordValidator();
-        validator.initialize(null); // Initialization if necessary
+        validator.initialize(null);
     }
 
     @Test

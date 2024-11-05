@@ -22,7 +22,7 @@ public class CosmicWordValidator implements ConstraintValidator<CosmicWordCheck,
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
-            return true; // @NotNull should be used to enforce non-null if required
+            return true;
         }
         return COSMIC_TERMS.stream().anyMatch(value.toLowerCase()::contains);
     }

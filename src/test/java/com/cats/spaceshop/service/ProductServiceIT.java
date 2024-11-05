@@ -9,6 +9,6 @@ public class ProductServiceIT {
 
     @Test
     public void testCreateProduct() {
-        assertEquals(1, 1); // Example assertion
+        assertEquals(1, 1);
     }
 }

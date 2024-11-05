@@ -81,7 +81,6 @@ class CategoryMapperTest {
         assertNotNull(categoryDtos);
         assertEquals(categories.size(), categoryDtos.size());
 
-        // Check the first category in the DTOs list
         assertEquals(categories.get(0).getId(), categoryDtos.get(0).getCategoryId());
         assertEquals(categories.get(0).getName(), categoryDtos.get(0).getName());
         assertEquals(categories.get(0).getDescription(), categoryDtos.get(0).getDescription());
@@ -91,10 +90,8 @@ class CategoryMapperTest {
     void testToCategoryDtoFromCategoryCreateDto() {
         CategoryDto mappedCategoryDto = categoryMapper.toCategoryDto(categoryCreateDto);
 
-        // Then
         assertEquals(categoryCreateDto.getName(), mappedCategoryDto.getName());
         assertEquals(categoryCreateDto.getDescription(), mappedCategoryDto.getDescription());
-        // Check that the categoryId is null since it was not set
         assertNull(mappedCategoryDto.getCategoryId());
     }
 }

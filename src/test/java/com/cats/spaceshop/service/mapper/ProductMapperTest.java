@@ -33,7 +33,7 @@ class ProductMapperTest {
                 .build();
 
         product = Product.builder()
-                .productId(UUID.randomUUID()) // Ensure this matches the expected format
+                .productId(UUID.randomUUID())
                 .name("Cat Toy")
                 .description("A fun toy for cats.")
                 .price(new BigDecimal(9.99))

@@ -172,7 +172,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Product not found for update: " + product.getProductId()));
 
         Product updatedProduct = Product.builder()
-                .productId(existingProduct.getProductId()) // Retain the original ID
+                .productId(existingProduct.getProductId())
                 .name(product.getName() != null ? product.getName() : existingProduct.getName())
                 .description(product.getDescription() != null ? product.getDescription() : existingProduct.getDescription())
                 .price(product.getPrice() != null ? product.getPrice() : existingProduct.getPrice())
