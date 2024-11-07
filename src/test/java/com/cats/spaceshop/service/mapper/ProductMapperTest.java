@@ -22,67 +22,97 @@ class ProductMapperTest {
     private Product product;
     private ProductDetailsDto productDetailsDto;
 
-    @BeforeEach
-    void setUp() {
-        productMapper = Mappers.getMapper(ProductMapper.class);
+    private static final ProductCreateDto DEFAULT_PRODUCT_CREATE_DTO = buildProductCreateDto(
+            "Cat Toy",
+            "A fun toy for cats.",
+            new BigDecimal(9.99),
+            100,
+            "CT-001"
+    );
+    private static final Product DEFAULT_PRODUCT = buildProduct(
+            UUID.randomUUID(),
+            "Cat Toy",
+            "A fun toy for cats.",
+            new BigDecimal(9.99),
+            100,
+            "CT-001"
+    );
+    private static final ProductDetailsDto DEFAULT_PRODUCT_DETAILS_DTO = buildProductDetailsDto(DEFAULT_PRODUCT);
 
-        productCreateDto = ProductCreateDto.builder()
-                .name("Cat Toy")
-                .description("A fun toy for cats.")
-                .price(new BigDecimal(9.99))
+
+    public static ProductCreateDto buildProductCreateDto(String name, String description, BigDecimal price, Integer stockQuantity, String sku){
+        return ProductCreateDto.builder()
+                .name(name)
+                .description(description)
+                .price(price)
+                .stockQuantity(stockQuantity)
+                .sku(sku)
                 .build();
+    }
 
-        product = Product.builder()
-                .productId(UUID.randomUUID())
-                .name("Cat Toy")
-                .description("A fun toy for cats.")
-                .price(new BigDecimal(9.99))
+    public static Product buildProduct(UUID id, String name, String description, BigDecimal price, Integer stockQuantity, String sku){
+        return Product.builder()
+                .productId(id)
+                .name(name)
+                .description(description)
+                .price(price)
+                .stockQuantity(stockQuantity)
+                .sku(sku)
                 .build();
+    }
 
-        productDetailsDto = ProductDetailsDto.builder()
+    public static ProductDetailsDto buildProductDetailsDto(Product product){
+        return ProductDetailsDto.builder()
                 .productId(product.getProductId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
+                .stockQuantity(product.getStockQuantity())
+                .sku(product.getSku())
                 .build();
+    }
+
+    @BeforeEach
+    void setUp() {
+        productMapper = Mappers.getMapper(ProductMapper.class);
     }
 
     @Test
     void testToEntityFromCreateDto() {
-        Product product = productMapper.toEntity(productCreateDto);
+        Product product = productMapper.toEntity(DEFAULT_PRODUCT_CREATE_DTO);
 
         assertNotNull(product);
         assertNotNull(product.getProductId());
-        assertEquals(productCreateDto.getName(), product.getName());
-        assertEquals(productCreateDto.getDescription(), product.getDescription());
-        assertEquals(productCreateDto.getPrice(), product.getPrice());
+        assertEquals(DEFAULT_PRODUCT_CREATE_DTO.getName(), product.getName());
+        assertEquals(DEFAULT_PRODUCT_CREATE_DTO.getDescription(), product.getDescription());
+        assertEquals(DEFAULT_PRODUCT_CREATE_DTO.getPrice(), product.getPrice());
     }
 
     @Test
     void testToEntityFromDetailsDto() {
-        Product product = productMapper.toEntity(productDetailsDto);
+        Product product = productMapper.toEntity(DEFAULT_PRODUCT_DETAILS_DTO);
 
         assertNotNull(product);
-        assertEquals(productDetailsDto.getProductId(), product.getProductId());
-        assertEquals(productDetailsDto.getName(), product.getName());
-        assertEquals(productDetailsDto.getDescription(), product.getDescription());
-        assertEquals(productDetailsDto.getPrice(), product.getPrice());
+        assertEquals(DEFAULT_PRODUCT_DETAILS_DTO.getProductId(), product.getProductId());
+        assertEquals(DEFAULT_PRODUCT_DETAILS_DTO.getName(), product.getName());
+        assertEquals(DEFAULT_PRODUCT_DETAILS_DTO.getDescription(), product.getDescription());
+        assertEquals(DEFAULT_PRODUCT_DETAILS_DTO.getPrice(), product.getPrice());
     }
 
     @Test
     void testToDto() {
-        ProductDetailsDto dto = productMapper.toDto(product);
+        ProductDetailsDto dto = productMapper.toDto(DEFAULT_PRODUCT);
 
         assertNotNull(dto);
-        assertEquals(product.getProductId(), dto.getProductId());
-        assertEquals(product.getName(), dto.getName());
-        assertEquals(product.getDescription(), dto.getDescription());
-        assertEquals(product.getPrice(), dto.getPrice());
+        assertEquals(DEFAULT_PRODUCT.getProductId(), dto.getProductId());
+        assertEquals(DEFAULT_PRODUCT.getName(), dto.getName());
+        assertEquals(DEFAULT_PRODUCT.getDescription(), dto.getDescription());
+        assertEquals(DEFAULT_PRODUCT.getPrice(), dto.getPrice());
     }
 
     @Test
     void testToDtoList() {
-        List<Product> products = Arrays.asList(product);
+        List<Product> products = Arrays.asList(DEFAULT_PRODUCT);
         List<ProductDetailsDto> dtoList = productMapper.toDtoList(products);
 
         assertNotNull(dtoList);

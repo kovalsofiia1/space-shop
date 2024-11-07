@@ -13,6 +13,7 @@ import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Value
 @Builder(toBuilder = true)
@@ -70,4 +71,8 @@ public class ProductCreateDto {
     )
     @Pattern(regexp = "^(\\w|\\s|-|_)+$", message = "Product SKU must be alphanumeric and may contain spaces, dashes, and underscores")
     String sku;
+
+//    public static ProductCreateDto build(String name, String description, BigDecimal price, Integer stockQuantity, String sku) {
+//        return new ProductCreateDto(UUID.randomUUID().toString(), name, description, price, stockQuantity, sku);
+//    }
 }

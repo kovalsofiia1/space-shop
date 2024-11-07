@@ -11,6 +11,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.cats.spaceshop.constants.CategoryTestConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -28,22 +29,11 @@ class CategoryMapperTest {
     void setUp() {
         categoryMapper = Mappers.getMapper(CategoryMapper.class);
 
-        category = Category.builder()
-                .id("5")
-                .name("Astro Beds")
-                .description("Beds for cats who love stargazing.")
-                .build();
+        category = CATEGORY;
 
-        categoryDto = CategoryDto.builder()
-                .categoryId("5")
-                .name("Astro Beds")
-                .description("Beds for cats who love stargazing.")
-                .build();
+        categoryDto = CATEGORY_DTO;
 
-        categoryCreateDto = CategoryCreateDto.builder()
-                .name("Astro Beds")
-                .description("Beds for cats who love stargazing.")
-                .build();
+        categoryCreateDto = CATEGORY_CREATE_DTO;
     }
 
     @Test
