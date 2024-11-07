@@ -5,11 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 import com.cats.spaceshop.domain.product.Product;
-import com.cats.spaceshop.dto.MyApiResponse;
-import com.cats.spaceshop.dto.category.CategoryDto;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
-import com.cats.spaceshop.service.ProductService;
 import com.cats.spaceshop.service.exception.ProductNotFoundException;
 import com.cats.spaceshop.service.mapper.ProductMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,13 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ProductServiceImplTest {
