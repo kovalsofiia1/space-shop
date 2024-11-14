@@ -7,7 +7,7 @@ import com.cats.spaceshop.featureToggle.FeatureToggleExtension;
 import com.cats.spaceshop.featureToggle.FeatureToggles;
 import com.cats.spaceshop.featureToggle.annotation.DisabledFeatureToggle;
 import com.cats.spaceshop.featureToggle.annotation.EnabledFeatureToggle;
-import lombok.SneakyThrows;
+//import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(FeatureToggleExtension.class)
 class CosmoCatControllerIT extends AbstractIt {
 
-//    private static final String DOBBY = "dobby";
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private MockMvc mockMvc;
 

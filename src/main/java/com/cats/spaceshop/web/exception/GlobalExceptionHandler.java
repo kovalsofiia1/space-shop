@@ -1,5 +1,6 @@
 package com.cats.spaceshop.web.exception;
 
+import com.cats.spaceshop.featureToggle.exception.FeatureToggleNotEnabledException;
 import com.cats.spaceshop.service.exception.CategoryNotFoundException;
 import com.cats.spaceshop.service.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -72,5 +73,10 @@ public class GlobalExceptionHandler {
         problemDetail.setProperty("timestamp", LocalDateTime.now());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(problemDetail);
+    }
+
+    @ExceptionHandler(FeatureToggleNotEnabledException.class)
+    public ResponseEntity<String> handleFeatureToggleNotEnabled(FeatureToggleNotEnabledException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }
