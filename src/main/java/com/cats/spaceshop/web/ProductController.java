@@ -1,7 +1,5 @@
 package com.cats.spaceshop.web;
 
-import com.cats.spaceshop.dto.MyApiResponse;
-import com.cats.spaceshop.dto.category.CategoryDto;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import com.cats.spaceshop.service.ProductService;
@@ -16,7 +14,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 

@@ -1,6 +1,5 @@
 package com.cats.spaceshop.featureToggle.aspect;
 
-import com.cats.spaceshop.featureToggle.config.FeatureToggleProperties;
 import com.cats.spaceshop.featureToggle.service.FeatureToggleService;
 import com.cats.spaceshop.featureToggle.FeatureToggles;
 import com.cats.spaceshop.featureToggle.annotation.FeatureToggle;

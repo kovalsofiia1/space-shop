@@ -1,7 +1,6 @@
 package com.cats.spaceshop.service.impl;
 
 import com.cats.spaceshop.domain.product.Product;
-import com.cats.spaceshop.dto.MyApiResponse;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import com.cats.spaceshop.service.ProductService;

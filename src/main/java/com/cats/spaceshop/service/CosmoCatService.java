@@ -1,14 +1,9 @@
 package com.cats.spaceshop.service;
 
-import com.cats.spaceshop.featureToggle.FeatureToggles;
-import com.cats.spaceshop.featureToggle.annotation.FeatureToggle;
-import org.springframework.stereotype.Service;
+import com.cats.spaceshop.dto.cosmocat.CosmoCatDto;
 
-@Service
-public class CosmoCatService {
+import java.util.List;
 
-    @FeatureToggle(FeatureToggles.COSMO_CATS)
-    public String getCosmoCats() {
-        return "List of Cosmo Cats!";
-    }
+public interface CosmoCatService {
+    List<CosmoCatDto> getCosmoCats();
 }

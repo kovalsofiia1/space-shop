@@ -1,6 +1,5 @@
 package com.cats.spaceshop.web;
 
-import com.cats.spaceshop.dto.MyApiResponse;
 import com.cats.spaceshop.dto.category.CategoryCreateDto;
 import com.cats.spaceshop.dto.category.CategoryDto;
 import com.cats.spaceshop.service.CategoryService;
@@ -9,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -18,9 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Validated
