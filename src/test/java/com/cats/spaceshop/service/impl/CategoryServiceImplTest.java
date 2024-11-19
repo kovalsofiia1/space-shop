@@ -115,7 +115,7 @@ class CategoryServiceImplTest {
                 "Expected CategoryNotFoundException for non-existent category"
         );
 
-        assertEquals("Category not found for update: " + categoryDto.getCategoryId(), thrown.getMessage());
+        assertEquals("Category with id " + categoryDto.getCategoryId() + " not found exception", thrown.getMessage());
     }
 
     @Test

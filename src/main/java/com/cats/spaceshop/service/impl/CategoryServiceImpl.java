@@ -1,7 +1,6 @@
 package com.cats.spaceshop.service.impl;
 
 import com.cats.spaceshop.domain.category.Category;
-import com.cats.spaceshop.dto.MyApiResponse;
 import com.cats.spaceshop.dto.category.CategoryCreateDto;
 import com.cats.spaceshop.service.exception.CategoryNotFoundException;
 import com.cats.spaceshop.service.mapper.CategoryMapper;
@@ -11,7 +10,6 @@ import com.cats.spaceshop.dto.category.CategoryDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -80,7 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category existingCategory = categories.stream()
                 .filter(cat -> cat.getId().equals(categoryDto.getCategoryId()))
                 .findFirst()
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found for update: " + categoryDto.getCategoryId()));
+                .orElseThrow(() -> new CategoryNotFoundException(categoryDto.getCategoryId()));
 
         Category updatedCategory = Category.builder()
                 .id(existingCategory.getId())
@@ -98,7 +96,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteById(String categoryId) {
         boolean removed = categories.removeIf(category -> category.getId().equals(categoryId));
         if (!removed) {
-            throw new CategoryNotFoundException("Category not found for deletion: " + categoryId);
+            throw new CategoryNotFoundException(categoryId);
         }
     }
 }

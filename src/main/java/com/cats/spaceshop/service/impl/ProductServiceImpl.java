@@ -1,7 +1,6 @@
 package com.cats.spaceshop.service.impl;
 
 import com.cats.spaceshop.domain.product.Product;
-import com.cats.spaceshop.dto.MyApiResponse;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import com.cats.spaceshop.service.ProductService;
@@ -150,7 +149,7 @@ public class ProductServiceImpl implements ProductService {
         return Optional.ofNullable(productMapper.toDtoList(products).stream()
                 .filter(product -> product.getProductId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id)));
+                .orElseThrow(() -> new ProductNotFoundException(id)));
     }
 
     @Override
@@ -169,7 +168,7 @@ public class ProductServiceImpl implements ProductService {
         Product existingProduct = products.stream()
                 .filter(prod -> prod.getProductId().equals(product.getProductId()))
                 .findFirst()
-                .orElseThrow(() -> new ProductNotFoundException("Product not found for update: " + product.getProductId()));
+                .orElseThrow(() -> new ProductNotFoundException(product.getProductId()));
 
         Product updatedProduct = Product.builder()
                 .productId(existingProduct.getProductId())
@@ -190,7 +189,7 @@ public class ProductServiceImpl implements ProductService {
     public void deleteById(UUID productId) {
         boolean removed = products.removeIf(product -> product.getProductId().equals(productId));
         if (!removed) {
-            throw new ProductNotFoundException("Product not found for deletion: " + productId);
+            throw new ProductNotFoundException(productId);
         }
     }
 

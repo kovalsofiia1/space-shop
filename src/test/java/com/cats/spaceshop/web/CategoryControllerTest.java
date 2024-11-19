@@ -67,13 +67,13 @@ class CategoryControllerTest {
     @Test
     void getCategory_ReturnsNotFound_WhenCategoryDoesNotExist() {
         String id = "1";
-        when(categoryService.findById(id)).thenThrow(new CategoryNotFoundException("Category not found with ID: " + id));
+        when(categoryService.findById(id)).thenThrow(new CategoryNotFoundException(id));
 
         CategoryNotFoundException exception = assertThrows(CategoryNotFoundException.class, () -> {
             categoryController.getCategory(id);
         });
 
-        assertEquals("Category not found with ID: " + id, exception.getMessage());
+        assertEquals("Category with id " + id + " not found exception", exception.getMessage());
         verify(categoryService, times(1)).findById(id);
     }
 
@@ -117,14 +117,14 @@ class CategoryControllerTest {
                 .description("Beds for cats who love stargazing.")
                 .build();
 
-        doThrow(new CategoryNotFoundException("Category not found for update: " + id))
+        doThrow(new CategoryNotFoundException(id))
                 .when(categoryService).update(updatedCategory);
 
         CategoryNotFoundException thrown = assertThrows(CategoryNotFoundException.class, () -> {
             categoryController.updateCategory(id, updatedCategory);
         });
 
-        assertEquals("Category not found for update: " + id, thrown.getMessage());
+        assertEquals("Category with id " + id + " not found exception", thrown.getMessage());
     }
 
     @Test
@@ -141,7 +141,7 @@ class CategoryControllerTest {
     @Test
     void deleteCategory_ReturnsNotFound_WhenCategoryDoesNotExist() {
         String id = "1";
-        doThrow(new CategoryNotFoundException("Category not found")).when(categoryService).deleteById(id);
+        doThrow(new CategoryNotFoundException(id)).when(categoryService).deleteById(id);
 
         assertThrows(CategoryNotFoundException.class, () -> {
             categoryController.deleteCategory(id);

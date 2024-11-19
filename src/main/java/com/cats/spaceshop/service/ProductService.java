@@ -1,7 +1,5 @@
 package com.cats.spaceshop.service;
 
-import com.cats.spaceshop.domain.product.Product;
-import com.cats.spaceshop.dto.MyApiResponse;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import org.springframework.stereotype.Service;

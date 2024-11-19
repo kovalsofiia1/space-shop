@@ -1,5 +1,4 @@
 package com.cats.spaceshop.service;
-import com.cats.spaceshop.dto.MyApiResponse;
 import com.cats.spaceshop.dto.category.CategoryCreateDto;
 import com.cats.spaceshop.dto.category.CategoryDto;
 import java.util.List;
