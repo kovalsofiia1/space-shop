@@ -1,0 +1,362 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/v1/products/{id}:
+    get:
+      tags:
+      - product-controller
+      summary: Get product by ID
+      description: Retrieve a product by its unique ID.
+      operationId: getProductById
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the product
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "404":
+          description: Product not found
+        "200":
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductDetailsDto"
+    put:
+      tags:
+      - product-controller
+      summary: Update a product
+      description: Update the details of an existing product.
+      operationId: updateProduct
+      parameters:
+      - name: id
+        in: path
+        description: ID of the product to update
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Updated details of the product
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductDetailsDto"
+        required: true
+      responses:
+        "409":
+          description: Conflict in updating product
+        "200":
+          description: Product updated successfully
+          content:
+            application/json: {}
+        "400":
+          description: Bad request - ID mismatch
+    delete:
+      tags:
+      - product-controller
+      summary: Delete a product
+      description: Delete a product by its ID.
+      operationId: deleteProduct
+      parameters:
+      - name: id
+        in: path
+        description: ID of the product to delete
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "404":
+          description: Product not found
+        "200":
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /api/v1/categories/{id}:
+    get:
+      tags:
+      - category-controller
+      summary: Retrieve a category by ID
+      description: Fetch details of a category using its ID.
+      operationId: getCategory
+      parameters:
+      - name: id
+        in: path
+        description: Unique identifier of the category
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Category found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryDto"
+        "404":
+          description: Category not found
+    put:
+      tags:
+      - category-controller
+      summary: Update an existing category
+      description: Update the details of a category by its ID.
+      operationId: updateCategory
+      parameters:
+      - name: id
+        in: path
+        description: ID of the category to update
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Updated details of the category
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryDto"
+        required: true
+      responses:
+        "200":
+          description: Category updated successfully
+        "400":
+          description: Invalid input
+        "404":
+          description: Category not found
+    delete:
+      tags:
+      - category-controller
+      summary: Delete a category
+      description: Delete a category by its unique ID.
+      operationId: deleteCategory
+      parameters:
+      - name: id
+        in: path
+        description: ID of the category to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Category deleted successfully
+        "404":
+          description: Category not found
+  /api/v1/products:
+    get:
+      tags:
+      - product-controller
+      summary: Retrieve all products
+      description: Get a list of all available products.
+      operationId: getAllProducts
+      responses:
+        "200":
+          description: Products retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductDetailsDto"
+    post:
+      tags:
+      - product-controller
+      summary: Create a new product
+      description: Create a new product with specified details.
+      operationId: createProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductCreateDto"
+        required: true
+      responses:
+        "409":
+          description: Conflict in product creation
+        "201":
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /api/v1/categories:
+    get:
+      tags:
+      - category-controller
+      summary: Retrieve all categories
+      description: Fetch a list of all available categories.
+      operationId: getAllCategories
+      responses:
+        "200":
+          description: Categories retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryDto"
+    post:
+      tags:
+      - category-controller
+      summary: Create a new category
+      description: Create a new category with the specified details.
+      operationId: createCategory
+      requestBody:
+        description: Details of the new category
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryCreateDto"
+        required: true
+      responses:
+        "201":
+          description: Category created successfully
+          content:
+            application/json: {}
+        "400":
+          description: Invalid input
+  /api/v1/products/category/{categoryId}:
+    get:
+      tags:
+      - product-controller
+      summary: Get products by category
+      description: Retrieve a list of products in a specific category.
+      operationId: getProductByCategory
+      parameters:
+      - name: categoryId
+        in: path
+        description: Unique identifier of the category
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Products found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductDetailsDto"
+        "404":
+          description: No products found for category
+components:
+  schemas:
+    ProductDetailsDto:
+      required:
+      - categoryId
+      - description
+      - name
+      - price
+      - productId
+      - stockQuantity
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        name:
+          maxLength: 100
+          minLength: 0
+          type: string
+          description: "Product name must contain a cosmic term like 'star', 'galaxy',\
+            \ 'comet', etc."
+        description:
+          maxLength: 500
+          minLength: 0
+          type: string
+        categoryId:
+          type: string
+        price:
+          minimum: 0.0
+          exclusiveMinimum: true
+          type: number
+        stockQuantity:
+          type: integer
+          format: int32
+        sku:
+          pattern: ^(\w|\s|-|_)+$
+          type: string
+    CategoryDto:
+      required:
+      - categoryId
+      - name
+      type: object
+      properties:
+        categoryId:
+          type: string
+        name:
+          maxLength: 100
+          minLength: 0
+          type: string
+        description:
+          maxLength: 255
+          minLength: 0
+          type: string
+    ProductCreateDto:
+      required:
+      - categoryId
+      - description
+      - name
+      - price
+      - stockQuantity
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 0
+          type: string
+          description: "Product name must contain a cosmic term like 'star', 'galaxy',\
+            \ 'comet', etc."
+          example: Galaxy Star
+        description:
+          maxLength: 500
+          minLength: 0
+          type: string
+          description: Detailed description of the product.
+          example: A cosmic product filled with stardust.
+        categoryId:
+          type: string
+          description: Unique identifier of the category the product belongs to.
+          example: 123e4567-e89b-12d3-a456-426614174000
+        price:
+          minimum: 0.0
+          exclusiveMinimum: true
+          type: number
+          description: "The price of the product, must be greater than zero."
+          example: 15.99
+        stockQuantity:
+          minimum: 0
+          type: integer
+          description: "Available stock quantity, must be zero or positive."
+          format: int32
+          example: 10
+        sku:
+          pattern: ^(\w|\s|-|_)+$
+          type: string
+          description: "Product SKU, must be alphanumeric and may contain spaces,\
+            \ dashes, and underscores."
+          example: GALAXY-STAR-001
+    ApiResponse:
+      type: object
+    CategoryCreateDto:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 0
+          type: string
+          description: "The name of the category. Must contain a cosmic term such\
+            \ as 'star', 'galaxy', or 'comet'."
+          example: Galactic Exploration
+        description:
+          maxLength: 255
+          minLength: 0
+          type: string
+          description: A brief description of the category
+          example: Products related to space exploration
