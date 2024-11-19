@@ -7,16 +7,6 @@ jacoco {
 
 tasks.register('integrationTest', Test) {
     description = "Defines the test type 'integrationTest' for thin integration test"
-
-    // Disable the task if no integration tests are present
-    enabled = !fileTree("src/integrationTest/java").isEmpty()
-
-    maxParallelForks = 4
-    filter {
-        includeTestsMatching '*IT'
-    }
-
-    finalizedBy tasks.jacocoIntegrationTestReport // report is always generated after tests run
 }
 
 jacocoTestCoverageVerification {
