@@ -2,6 +2,8 @@ package com.cats.spaceshop.web;
 
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
+import com.cats.spaceshop.featureToggle.FeatureToggles;
+import com.cats.spaceshop.featureToggle.annotation.FeatureToggle;
 import com.cats.spaceshop.service.ProductService;
 import com.cats.spaceshop.service.exception.ProductNotFoundException;
 import jakarta.validation.Valid;
@@ -36,6 +38,7 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "Products retrieved successfully",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDetailsDto.class)))
     @GetMapping("")
+    @FeatureToggle(FeatureToggles.KITTY_PRODUCTS)
     public ResponseEntity<List<ProductDetailsDto>> getAllProducts() {
         List<ProductDetailsDto> products = productService.findAll();
         return ResponseEntity.ok(products);
@@ -48,6 +51,7 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
     })
     @GetMapping("/{id}")
+    @FeatureToggle(FeatureToggles.KITTY_PRODUCTS)
     public ResponseEntity<ProductDetailsDto> getProductById(
             @Parameter(description = "Unique identifier of the product") @PathVariable UUID id) {
         ProductDetailsDto product = productService.findById(id)
@@ -62,6 +66,7 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "No products found for category", content = @Content)
     })
     @GetMapping("category/{categoryId}")
+    @FeatureToggle(FeatureToggles.KITTY_PRODUCTS)
     public ResponseEntity<List<ProductDetailsDto>> getProductByCategory(
             @Parameter(description = "Unique identifier of the category") @PathVariable String categoryId) {
         List<ProductDetailsDto> products = productService.findByCategory(categoryId).orElse(Collections.emptyList());
@@ -75,6 +80,7 @@ public class ProductController {
             @ApiResponse(responseCode = "409", description = "Conflict in product creation", content = @Content)
     })
     @PostMapping("")
+    @FeatureToggle(FeatureToggles.KITTY_PRODUCTS)
     public ResponseEntity<ProductDetailsDto> createProduct(
          @Valid @org.springframework.web.bind.annotation.RequestBody ProductCreateDto product) {
 

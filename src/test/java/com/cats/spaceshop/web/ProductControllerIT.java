@@ -3,33 +3,41 @@ package com.cats.spaceshop.web;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import com.cats.spaceshop.service.ProductService;
-import com.cats.spaceshop.service.exception.ProductNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.math.BigDecimal;
-import java.util.Collections;
+import com.cats.spaceshop.AbstractIt;
+import com.cats.spaceshop.featureToggle.FeatureToggleExtension;
+import com.cats.spaceshop.featureToggle.FeatureToggles;
+import com.cats.spaceshop.featureToggle.annotation.DisabledFeatureToggle;
+import com.cats.spaceshop.featureToggle.annotation.EnabledFeatureToggle;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.cats.spaceshop.constants.ProductTestConstants.PRODUCT_CREATE_DTO;
 import static com.cats.spaceshop.constants.ProductTestConstants.PRODUCT_DETAILS_DTO;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static com.cats.spaceshop.constants.ProductTestConstants.PRODUCT_CREATE_DTO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ProductController.class)
-class ProductControllerIT {
+@AutoConfigureMockMvc
+@DisplayName("Products Controller IT")
+@ExtendWith(FeatureToggleExtension.class)
+class ProductControllerIT extends AbstractIt {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,20 +47,69 @@ class ProductControllerIT {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    private UUID productId;
     private ProductDetailsDto productDetailsDto;
     private ProductCreateDto productCreateDto;
 
 
     @BeforeEach
     void setUp() {
-        productId = UUID.randomUUID();
         productCreateDto = PRODUCT_CREATE_DTO;
         productDetailsDto = PRODUCT_DETAILS_DTO;
     }
 
     @Test
+    @DisabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
+    void shouldGetProductsDisabled() throws Exception {
+        mockMvc.perform(get("/api/v1/products")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
+    void shouldGetProductsEnabled() throws Exception {
+        mockMvc.perform(get("/api/v1/products")).andExpect(status().isOk());
+    }
+
+
+    @Test
+    @DisabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
+    void shouldGet404ForGetProductById() throws Exception {
+        UUID id = UUID.randomUUID();
+        mockMvc.perform(get("/api/v1/products/{id}", id))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
+    void shouldGet200ForGetProductById() throws Exception {
+        ProductDetailsDto productDetailsDto = PRODUCT_DETAILS_DTO;
+        UUID id = productDetailsDto.getProductId();
+        when(productService.findById(id)).thenReturn(Optional.of(productDetailsDto));
+
+        mockMvc.perform(get("/api/v1/products/{id}", id))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
+    void shouldGet404ForGetProductByCategoryFeatureDisabled() throws Exception {
+        String categoryId = "some-category-id";
+        mockMvc.perform(get("/api/v1/products/category/{categoryId}", categoryId))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
+    void shouldGet200ForGetProductByCategory() throws Exception {
+        String categoryId = "some-category-id";
+        List<ProductDetailsDto> products = List.of(PRODUCT_DETAILS_DTO);
+        when(productService.findByCategory(categoryId)).thenReturn(Optional.of(products));
+
+        mockMvc.perform(get("/api/v1/products/category/{categoryId}", categoryId))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
     void getAllProducts_ShouldReturnProductList() throws Exception {
         Mockito.when(productService.findAll()).thenReturn(List.of(productDetailsDto));
 
@@ -63,6 +120,7 @@ class ProductControllerIT {
     }
 
     @Test
+    @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
     void getProductById_ShouldReturnProductDetails() throws Exception {
         Mockito.when(productService.findById(eq(productDetailsDto.getProductId()))).thenReturn(Optional.of(productDetailsDto));
 
@@ -80,6 +138,7 @@ class ProductControllerIT {
     }
 
     @Test
+    @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
     void getProductByCategory_ShouldReturnProductList() throws Exception {
         Mockito.when(productService.findByCategory(anyString())).thenReturn(Optional.of(List.of(productDetailsDto)));
 
@@ -90,6 +149,7 @@ class ProductControllerIT {
     }
 
     @Test
+    @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
     void createProduct_ShouldReturnCreatedProduct() throws Exception {
         Mockito.when(productService.save(any(ProductCreateDto.class))).thenReturn(productDetailsDto);
 
@@ -103,7 +163,7 @@ class ProductControllerIT {
     @Test
     void updateProduct_ShouldReturnUpdatedProduct() throws Exception {
 
-         ProductDetailsDto updated = ProductDetailsDto.builder()
+        ProductDetailsDto updated = ProductDetailsDto.builder()
                 .productId(productDetailsDto.getProductId())
                 .name(productDetailsDto.getName() + "updated")
                 .description(productDetailsDto.getDescription())
@@ -120,6 +180,7 @@ class ProductControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(updated.getName()));
     }
+
 
     @Test
     void updateProduct_ShouldReturnBadRequest_WhenIdMismatch() throws Exception {

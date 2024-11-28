@@ -1,4 +1,4 @@
-package com.cats.spaceshop.domain.customer;
+package com.cats.spaceshop.domain.cosmocat;
 
 import lombok.Builder;
 import lombok.Value;
@@ -6,8 +6,7 @@ import java.util.UUID;
 
 @Value
 @Builder(toBuilder = true)
-public class Customer {
-
+public class CosmoCat {
     UUID id;
     String name;
     String email;
