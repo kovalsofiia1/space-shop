@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,7 +55,7 @@ public class ProductController {
     public ResponseEntity<ProductDetailsDto> getProductById(
             @Parameter(description = "Unique identifier of the product") @PathVariable UUID id) {
         ProductDetailsDto product = productService.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found with ID: " + id));
+                .orElseThrow(() -> new ProductNotFoundException(id));
         return ResponseEntity.ok(product);
     }
 
@@ -68,8 +69,7 @@ public class ProductController {
     @FeatureToggle(FeatureToggles.KITTY_PRODUCTS)
     public ResponseEntity<List<ProductDetailsDto>> getProductByCategory(
             @Parameter(description = "Unique identifier of the category") @PathVariable String categoryId) {
-        List<ProductDetailsDto> products = productService.findByCategory(categoryId)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found with categoryID: " + categoryId));
+        List<ProductDetailsDto> products = productService.findByCategory(categoryId).orElse(Collections.emptyList());
         return ResponseEntity.ok(products);
     }
 

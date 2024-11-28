@@ -78,7 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category existingCategory = categories.stream()
                 .filter(cat -> cat.getId().equals(categoryDto.getCategoryId()))
                 .findFirst()
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found for update: " + categoryDto.getCategoryId()));
+                .orElseThrow(() -> new CategoryNotFoundException(categoryDto.getCategoryId()));
 
         Category updatedCategory = Category.builder()
                 .id(existingCategory.getId())
@@ -96,7 +96,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteById(String categoryId) {
         boolean removed = categories.removeIf(category -> category.getId().equals(categoryId));
         if (!removed) {
-            throw new CategoryNotFoundException("Category not found for deletion: " + categoryId);
+            throw new CategoryNotFoundException(categoryId);
         }
     }
 }

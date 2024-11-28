@@ -7,7 +7,7 @@ import com.cats.spaceshop.domain.category.Category;
 public class CategoryTestConstants {
 
     public static final String CATEGORY_ID = "5";
-    public static final String CATEGORY_NAME = "Astro Beds";
+    public static final String CATEGORY_NAME = "Star Beds";
     public static final String CATEGORY_DESCRIPTION = "Beds for cats who love stargazing.";
 
     public static final Category CATEGORY = Category.builder()

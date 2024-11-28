@@ -117,7 +117,7 @@ class ProductServiceImplTest {
                 "Expected ProductNotFoundException for non-existent product"
         );
 
-        assertEquals("Product not found for update: " + productDetailsDto.getProductId(), thrown.getMessage());
+        assertEquals("Product with id " + productDetailsDto.getProductId() + " not found exception", thrown.getMessage());
     }
 
     @Test

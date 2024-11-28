@@ -49,7 +49,7 @@ public class CategoryController {
             @Parameter(description = "Unique identifier of the category") @PathVariable String id) {
         return categoryService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new CategoryNotFoundException("Category not found with ID: " + id));
+                .orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
     @Operation(summary = "Create a new category", description = "Create a new category with the specified details.")
