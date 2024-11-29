@@ -4,7 +4,7 @@ databaseChangeLog:
       author: "author"
       changes:
         - createTable:
-            tableName: "categories"
+            tableName: "category"
             columns:
               - column:
                   name: "id"

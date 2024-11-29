@@ -4,6 +4,6 @@ databaseChangeLog:
       author: "author"
       changes:
         - addUniqueConstraint:
-            tableName: "products"
+            tableName: "product"
             columnNames: "name, category_id"
-            constraintName: "uk_products_name_category"
+            constraintName: "uk_product_name_category"

@@ -4,7 +4,7 @@ databaseChangeLog:
       author: "author"
       changes:
         - createTable:
-            tableName: "order_entries"
+            tableName: "order_entry"
             columns:
               - column:
                   name: "id"
@@ -16,15 +16,15 @@ databaseChangeLog:
                   type: "UUID"
                   constraints:
                     nullable: false
-                    foreignKeyName: "fk_order_entries_order"
-                    references: "orders(id)"
+                    foreignKeyName: "fk_order_entry_order"
+                    references: "order(id)"
               - column:
                   name: "product_id"
                   type: "UUID"
                   constraints:
                     nullable: false
-                    foreignKeyName: "fk_order_entries_product"
-                    references: "products(id)"
+                    foreignKeyName: "fk_order_entry_product"
+                    references: "product(id)"
               - column:
                   name: "quantity"
                   type: "INTEGER"

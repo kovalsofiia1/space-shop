@@ -4,7 +4,7 @@ databaseChangeLog:
       author: "author"
       changes:
         - createTable:
-            tableName: "orders"
+            tableName: "order"
             columns:
               - column:
                   name: "id"
@@ -16,8 +16,8 @@ databaseChangeLog:
                   type: "UUID"
                   constraints:
                     nullable: false
-                    foreignKeyName: "fk_orders_customer"
-                    references: "customers(id)"
+                    foreignKeyName: "fk_order_customer"
+                    references: "customer(id)"
               - column:
                   name: "created_at"
                   type: "TIMESTAMP"

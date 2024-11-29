@@ -4,7 +4,7 @@ databaseChangeLog:
       author: "author"
       changes:
         - createTable:
-            tableName: "products"
+            tableName: "product"
             columns:
               - column:
                   name: "id"
@@ -16,8 +16,8 @@ databaseChangeLog:
                   type: "UUID"
                   constraints:
                     nullable: false
-                    foreignKeyName: "fk_products_category"
-                    references: "categories(id)"
+                    foreignKeyName: "fk_product_category"
+                    references: "category(id)"
               - column:
                   name: "name"
                   type: "VARCHAR(100)"
