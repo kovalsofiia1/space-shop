@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @Validated
@@ -46,7 +47,7 @@ public class CategoryController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> getCategory(
-            @Parameter(description = "Unique identifier of the category") @PathVariable String id) {
+            @Parameter(description = "Unique identifier of the category") @PathVariable UUID id) {
         return categoryService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
@@ -93,7 +94,7 @@ public class CategoryController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategory(
-            @Parameter(description = "ID of the category to delete") @PathVariable String id) {
+            @Parameter(description = "ID of the category to delete") @PathVariable UUID id) {
         categoryService.deleteById(id);
         return ResponseEntity.ok("Category deleted successfully");
     }

@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.extern.jackson.Jacksonized;
 
+import java.util.UUID;
+
 @Value
 @Builder(toBuilder = true)
 @Jacksonized
@@ -16,7 +18,7 @@ import lombok.extern.jackson.Jacksonized;
 public class CategoryDto {
 
     @NotBlank(message = "Category ID is mandatory")
-    String categoryId;
+    UUID categoryId;
 
     @NotBlank(message = "Category name is mandatory")
     @Size(max = 100, message = "Category name cannot exceed 100 characters")

@@ -10,6 +10,7 @@ import com.cats.spaceshop.dto.category.CategoryDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -25,25 +26,25 @@ public class CategoryServiceImpl implements CategoryService {
 
     private void initializeCategories(){
         categories.add(Category.builder()
-                .id("1")
+                .id(UUID.randomUUID())
                 .name("Space Toys")
                 .description("Toys for cats who love space adventures.")
                 .build());
 
         categories.add(Category.builder()
-                .id("2")
+                .id(UUID.randomUUID())
                 .name("Galactic Treats")
                 .description("Delicious treats for your space-loving cats.")
                 .build());
 
         categories.add(Category.builder()
-                .id("3")
+                .id(UUID.randomUUID())
                 .name("Futuristic Scratching Posts")
                 .description("Scratching posts designed for cats in the future.")
                 .build());
 
         categories.add(Category.builder()
-                .id("4")
+                .id(UUID.randomUUID())
                 .name("Intergalactic Catnip")
                 .description("Catnip grown in zero gravity for maximum fun.")
                 .build());
@@ -55,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Optional<CategoryDto> findById(String categoryId) {
+    public Optional<CategoryDto> findById(UUID categoryId) {
         return categories.stream()
                 .filter(category -> category.getId().equals(categoryId))
                 .findFirst()
@@ -93,7 +94,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteById(String categoryId) {
+    public void deleteById(UUID categoryId) {
         boolean removed = categories.removeIf(category -> category.getId().equals(categoryId));
         if (!removed) {
             throw new CategoryNotFoundException(categoryId);

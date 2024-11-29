@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
 
-    @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
+    @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")
     Category toCreateCategory(CategoryCreateDto categoryCreateDto);
 
     @Mapping(target = "id", source = "categoryId")
