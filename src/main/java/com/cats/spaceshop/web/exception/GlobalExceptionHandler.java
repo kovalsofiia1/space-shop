@@ -2,6 +2,7 @@ package com.cats.spaceshop.web.exception;
 
 import com.cats.spaceshop.featureToggle.exception.FeatureToggleNotEnabledException;
 import com.cats.spaceshop.service.exception.CategoryNotFoundException;
+import com.cats.spaceshop.service.exception.CosmoCatNotFoundException;
 import com.cats.spaceshop.service.exception.OrderNotFoundException;
 import com.cats.spaceshop.service.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleCategoryNotFound(CategoryNotFoundException ex, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
         problemDetail.setTitle("Category Not Found");
+        problemDetail.setDetail(ex.getMessage());
+        problemDetail.setInstance(URI.create(request.getDescription(false).substring(4)));
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problemDetail);
+    }
+
+    @ExceptionHandler(CosmoCatNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleCosmoCatNotFound(CosmoCatNotFoundException ex, WebRequest request) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problemDetail.setTitle("CosmoCat Not Found");
         problemDetail.setDetail(ex.getMessage());
         problemDetail.setInstance(URI.create(request.getDescription(false).substring(4)));
         problemDetail.setProperty("timestamp", LocalDateTime.now());
