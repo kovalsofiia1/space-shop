@@ -14,16 +14,16 @@ public class OrderEntryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
-    private OrderEntity order;
+     OrderEntity order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private ProductEntity product;
+    ProductEntity product;
 
     @Column(nullable = false)
-    private Integer quantity;
+    Integer quantity;
 }

@@ -11,7 +11,6 @@ import java.util.UUID;
 @Builder(toBuilder = true)
 @Jacksonized
 public class OrderDto {
-
     UUID id;
     UUID cosmoCatId;
     List<OrderEntryDto> entriesList;
