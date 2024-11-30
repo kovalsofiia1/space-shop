@@ -1,12 +1,20 @@
 package com.cats.spaceshop.repository.entity;
+
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.UUID;
 
 @Entity
 @Table(name = "category")
-public class Category {
+@Data
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class CategoryEntity {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(nullable = false, length = 100)
@@ -14,6 +22,4 @@ public class Category {
 
     @Column(length = 255)
     private String description;
-
-    // Getters and Setters
 }

@@ -1,22 +1,27 @@
 package com.cats.spaceshop.repository.entity;
 
-import com.cats.spaceshop.repository.entity.OrderEntry;
 import jakarta.persistence.*;
-import java.util.List;
+import lombok.*;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "\"order\"")
+@Data
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Order {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false)
-    private UUID customerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false, foreignKey = @ForeignKey(name = "fk_order_customer"))
+    private Customer customer;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
-    private List<OrderEntry> entriesList;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
-    // Getters and Setters
 }

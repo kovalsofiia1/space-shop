@@ -1,33 +1,37 @@
 package com.cats.spaceshop.repository.entity;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
+import lombok.*;
+
 import java.util.UUID;
 
 @Entity
 @Table(name = "product")
+@Data
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
+
     @Id
-    @GeneratedValue
-    private UUID productId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+
+    @Column(name = "category_id", nullable = false)
+    private UUID categoryId;
 
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(length = 500)
+    @Column(length = 255)
     private String description;
 
     @Column(nullable = false)
-    private UUID categoryId;
+    private Double price;
 
     @Column(nullable = false)
-    private BigDecimal price;
+    private Integer stockQuantity;
 
-    @Column(nullable = false)
-    private int stockQuantity;
-
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, length = 50)
     private String sku;
-
-    // Getters and Setters
 }
