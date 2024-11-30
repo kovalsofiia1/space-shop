@@ -1,6 +1,5 @@
 package com.cats.spaceshop.service.impl;
 
-import com.cats.spaceshop.domain.category.Category;
 import com.cats.spaceshop.repository.entity.CategoryEntity;
 import com.cats.spaceshop.dto.category.CategoryCreateDto;
 import com.cats.spaceshop.service.exception.CategoryNotFoundException;

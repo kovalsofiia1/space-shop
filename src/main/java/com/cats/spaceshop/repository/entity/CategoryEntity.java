@@ -15,11 +15,11 @@ public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    UUID id;
 
     @Column(nullable = false, length = 100)
-    private String name;
+    String name;
 
     @Column(length = 255)
-    private String description;
+    String description;
 }

@@ -4,6 +4,7 @@ import com.cats.spaceshop.common.ExtendedValidation;
 import com.cats.spaceshop.dto.validation.CosmicWordCheck;
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Value;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @GroupSequence({ CategoryDto.class, ExtendedValidation.class })
 public class CategoryDto {
 
-    @NotBlank(message = "Category ID is mandatory")
+    @NotNull(message = "Category ID is mandatory")
     UUID categoryId;
 
     @NotBlank(message = "Category name is mandatory")

@@ -74,9 +74,8 @@ public class CategoryController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(
-            @Parameter(description = "ID of the category to update") @PathVariable String id,
+            @Parameter(description = "ID of the category to update") @PathVariable UUID id,
             @Valid @org.springframework.web.bind.annotation.RequestBody CategoryDto categoryDto) {
-
         if (!categoryDto.getCategoryId().equals(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Category ID in the request body does not match the path variable.");

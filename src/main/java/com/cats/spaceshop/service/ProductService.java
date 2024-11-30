@@ -12,11 +12,9 @@ import java.util.UUID;
 
 public interface ProductService {
     List<ProductDetailsDto> findAll();
-
     Optional<ProductDetailsDto> findById(UUID productId);
-
     ProductDetailsDto save(ProductCreateDto product);
     ProductDetailsDto update(ProductDetailsDto product);
     void deleteById(UUID productId);
-    Optional<List<ProductDetailsDto>> findByCategory(String categoryId);
+    Optional<List<ProductDetailsDto>> findByCategory(UUID categoryId);
 }

@@ -1,8 +1,10 @@
 package com.cats.spaceshop.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -15,23 +17,24 @@ public class ProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    UUID id;
 
-    @Column(name = "category_id", nullable = false)
-    private UUID categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false, foreignKey = @ForeignKey(name = "fk_product_category"))
+    CategoryEntity category;
 
     @Column(nullable = false, length = 100)
-    private String name;
+    String name;
 
     @Column(length = 255)
-    private String description;
+    String description;
 
     @Column(nullable = false)
-    private Double price;
+    BigDecimal price;
 
     @Column(nullable = false)
-    private Integer stockQuantity;
+    Integer stockQuantity;
 
     @Column(nullable = false, length = 50)
-    private String sku;
+    String sku;
 }

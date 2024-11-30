@@ -68,7 +68,7 @@ public class ProductController {
     @GetMapping("category/{categoryId}")
     @FeatureToggle(FeatureToggles.KITTY_PRODUCTS)
     public ResponseEntity<List<ProductDetailsDto>> getProductByCategory(
-            @Parameter(description = "Unique identifier of the category") @PathVariable String categoryId) {
+            @Parameter(description = "Unique identifier of the category") @PathVariable UUID categoryId) {
         List<ProductDetailsDto> products = productService.findByCategory(categoryId).orElse(Collections.emptyList());
         return ResponseEntity.ok(products);
     }

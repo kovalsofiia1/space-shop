@@ -1,6 +1,7 @@
 package com.cats.spaceshop.dto.product;
 
 import com.cats.spaceshop.common.ExtendedValidation;
+import com.cats.spaceshop.dto.category.CategoryDto;
 import com.cats.spaceshop.dto.validation.CosmicWordCheck;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.GroupSequence;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Builder(toBuilder = true)
 @Jacksonized
 @GroupSequence({ ProductDetailsDto.class, ExtendedValidation.class })
-public class ProductDetailsDto {
+public class ProductFullDetailsDto {
     @NotNull(message = "Product ID is mandatory")
     UUID productId;
 
@@ -35,7 +36,7 @@ public class ProductDetailsDto {
     String description;
 
     @NotNull(message = "Category ID is mandatory")
-    UUID categoryId;
+    CategoryDto category;
 
     @NotNull(message = "Price is mandatory")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")
