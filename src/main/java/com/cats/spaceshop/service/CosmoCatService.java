@@ -12,4 +12,5 @@ public interface CosmoCatService {
     CosmoCatDto addCosmoCat(CosmoCatCreateDto cosmoCatDto);
     CosmoCatDto updateCosmoCat(UUID id, CosmoCatDto cosmoCatDto);
     void deleteCosmoCat(UUID id);
+    CosmoCatDto getCosmoCatByEmail(String email);
 }

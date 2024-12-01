@@ -2,6 +2,7 @@ package com.cats.spaceshop.repository.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.NaturalId;
 
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public class CustomerEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @NaturalId
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 

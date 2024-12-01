@@ -19,7 +19,7 @@ public class CosmoCatController {
         this.cosmoCatService = cosmoCatService;
     }
 
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<List<CosmoCatDto>> getAllCosmoCats() {
         List<CosmoCatDto> cosmoCats = cosmoCatService.getCosmoCats();
         return ResponseEntity.ok(cosmoCats);
@@ -28,6 +28,12 @@ public class CosmoCatController {
     @GetMapping("/{id}")
     public ResponseEntity<CosmoCatDto> getCosmoCatById(@PathVariable UUID id) {
         CosmoCatDto cosmoCat = cosmoCatService.getCosmoCatById(id);
+        return ResponseEntity.ok(cosmoCat);
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<CosmoCatDto> getCosmoCatByEmail(@RequestParam(required = true) String email) {
+        CosmoCatDto cosmoCat = cosmoCatService.getCosmoCatByEmail(email);
         return ResponseEntity.ok(cosmoCat);
     }
 

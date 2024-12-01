@@ -4,7 +4,9 @@ import com.cats.spaceshop.dto.cosmocat.CosmoCatDto;
 import com.cats.spaceshop.repository.CustomerRepository;
 import com.cats.spaceshop.repository.entity.CustomerEntity;
 import com.cats.spaceshop.service.CosmoCatService;
+import com.cats.spaceshop.service.exception.CosmoCatNotFoundByEmailException;
 import com.cats.spaceshop.service.exception.CosmoCatNotFoundException;
+import com.cats.spaceshop.service.exception.CosmoCatWithEmailAlreadyExistsException;
 import org.springframework.stereotype.Service;
 
 import com.cats.spaceshop.dto.cosmocat.CosmoCatCreateDto;
@@ -12,6 +14,7 @@ import com.cats.spaceshop.service.mapper.CosmoCatMapper;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,8 +43,22 @@ public class CosmoCatServiceImpl implements CosmoCatService {
     }
 
     @Override
+    public CosmoCatDto getCosmoCatByEmail(String email) {
+        CustomerEntity customerEntity = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new CosmoCatNotFoundByEmailException(email)); // Кидаємо помилку, якщо не знайдено
+
+        return cosmoCatMapper.entityToDto(customerEntity);
+    }
+
+    @Override
     @Transactional
     public CosmoCatDto addCosmoCat(CosmoCatCreateDto cosmoCatCreationDto) {
+        Optional<CustomerEntity> existingCustomer = customerRepository.findByEmail(cosmoCatCreationDto.getEmail());
+
+        if (existingCustomer.isPresent()) {
+            throw new CosmoCatWithEmailAlreadyExistsException(cosmoCatCreationDto.getEmail());
+        }
+
         CustomerEntity customerEntity = cosmoCatMapper.creationDtoToEntity(cosmoCatCreationDto);
         CustomerEntity savedEntity = customerRepository.save(customerEntity);
         return cosmoCatMapper.entityToDto(savedEntity);

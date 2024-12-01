@@ -1,10 +1,7 @@
 package com.cats.spaceshop.web.exception;
 
 import com.cats.spaceshop.featureToggle.exception.FeatureToggleNotEnabledException;
-import com.cats.spaceshop.service.exception.CategoryNotFoundException;
-import com.cats.spaceshop.service.exception.CosmoCatNotFoundException;
-import com.cats.spaceshop.service.exception.OrderNotFoundException;
-import com.cats.spaceshop.service.exception.ProductNotFoundException;
+import com.cats.spaceshop.service.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -75,6 +72,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problemDetail);
     }
 
+    @ExceptionHandler(CosmoCatWithEmailAlreadyExistsException.class)
+    public ResponseEntity<ProblemDetail> handleCosmoCatExists(CosmoCatWithEmailAlreadyExistsException ex, WebRequest request) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problemDetail.setTitle("CosmoCat already exists");
+        problemDetail.setDetail(ex.getMessage());
+        problemDetail.setInstance(URI.create(request.getDescription(false).substring(4)));
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problemDetail);
+    }
     // Handle other exceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleAllExceptions(Exception ex, WebRequest request) {
