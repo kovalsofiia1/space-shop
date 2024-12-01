@@ -3,24 +3,24 @@ info:
   title: OpenAPI definition
   version: v0
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:8080
+    description: Generated server url
 paths:
   /api/v1/products/{id}:
     get:
       tags:
-      - product-controller
+        - product-controller
       summary: Get product by ID
       description: Retrieve a product by its unique ID.
       operationId: getProductById
       parameters:
-      - name: id
-        in: path
-        description: Unique identifier of the product
-        required: true
-        schema:
-          type: string
-          format: uuid
+        - name: id
+          in: path
+          description: Unique identifier of the product
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         "404":
           description: Product not found
@@ -32,71 +32,120 @@ paths:
                 $ref: "#/components/schemas/ProductDetailsDto"
     put:
       tags:
-      - product-controller
-      summary: Update a product
-      description: Update the details of an existing product.
+        - product-controller
+      summary: Update an existing product
+      description: Update the details of a product by its ID.
       operationId: updateProduct
       parameters:
-      - name: id
-        in: path
-        description: ID of the product to update
-        required: true
-        schema:
-          type: string
-          format: uuid
+        - name: id
+          in: path
+          description: ID of the product to update
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
-        description: Updated details of the product
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/ProductDetailsDto"
         required: true
       responses:
-        "409":
-          description: Conflict in updating product
+        "404":
+          description: Product not found
+        "400":
+          description: Invalid input
         "200":
           description: Product updated successfully
-          content:
-            application/json: {}
-        "400":
-          description: Bad request - ID mismatch
     delete:
       tags:
-      - product-controller
+        - product-controller
       summary: Delete a product
       description: Delete a product by its ID.
       operationId: deleteProduct
       parameters:
-      - name: id
-        in: path
-        description: ID of the product to delete
-        required: true
-        schema:
-          type: string
-          format: uuid
+        - name: id
+          in: path
+          description: ID of the product to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
-        "404":
-          description: Product not found
         "200":
           description: Product deleted successfully
+  /api/v1/cosmo-cats/{id}:
+    get:
+      tags:
+        - cosmo-cat-controller
+      operationId: getCosmoCatById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
           content:
-            application/json:
+            '*/*':
               schema:
-                $ref: "#/components/schemas/ApiResponse"
+                $ref: "#/components/schemas/CosmoCatDto"
+    put:
+      tags:
+        - cosmo-cat-controller
+      operationId: updateCosmoCat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CosmoCatDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CosmoCatDto"
+    delete:
+      tags:
+        - cosmo-cat-controller
+      operationId: deleteCosmoCat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
   /api/v1/categories/{id}:
     get:
       tags:
-      - category-controller
+        - category-controller
       summary: Retrieve a category by ID
       description: Fetch details of a category using its ID.
       operationId: getCategory
       parameters:
-      - name: id
-        in: path
-        description: Unique identifier of the category
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: Unique identifier of the category
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         "200":
           description: Category found
@@ -108,44 +157,45 @@ paths:
           description: Category not found
     put:
       tags:
-      - category-controller
+        - category-controller
       summary: Update an existing category
       description: Update the details of a category by its ID.
       operationId: updateCategory
       parameters:
-      - name: id
-        in: path
-        description: ID of the category to update
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: ID of the category to update
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
-        description: Updated details of the category
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CategoryDto"
         required: true
       responses:
-        "200":
-          description: Category updated successfully
         "400":
           description: Invalid input
+        "200":
+          description: Category updated successfully
         "404":
           description: Category not found
     delete:
       tags:
-      - category-controller
+        - category-controller
       summary: Delete a category
       description: Delete a category by its unique ID.
       operationId: deleteCategory
       parameters:
-      - name: id
-        in: path
-        description: ID of the category to delete
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: ID of the category to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         "200":
           description: Category deleted successfully
@@ -154,7 +204,7 @@ paths:
   /api/v1/products:
     get:
       tags:
-      - product-controller
+        - product-controller
       summary: Retrieve all products
       description: Get a list of all available products.
       operationId: getAllProducts
@@ -167,7 +217,7 @@ paths:
                 $ref: "#/components/schemas/ProductDetailsDto"
     post:
       tags:
-      - product-controller
+        - product-controller
       summary: Create a new product
       description: Create a new product with specified details.
       operationId: createProduct
@@ -186,10 +236,97 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+  /api/v1/orders:
+    get:
+      tags:
+        - order-controller
+      operationId: getAllOrders
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrderDto"
+    post:
+      tags:
+        - order-controller
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderCreateDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OrderDto"
+  /api/v1/orders/{orderId}/entries:
+    post:
+      tags:
+        - order-controller
+      operationId: addEntryToOrder
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderEntryCreateDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OrderDto"
+  /api/v1/cosmo-cats:
+    get:
+      tags:
+        - cosmo-cat-controller
+      operationId: getAllCosmoCats
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CosmoCatDto"
+    post:
+      tags:
+        - cosmo-cat-controller
+      operationId: addCosmoCat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CosmoCatCreateDto"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CosmoCatDto"
   /api/v1/categories:
     get:
       tags:
-      - category-controller
+        - category-controller
       summary: Retrieve all categories
       description: Fetch a list of all available categories.
       operationId: getAllCategories
@@ -202,38 +339,52 @@ paths:
                 $ref: "#/components/schemas/CategoryDto"
     post:
       tags:
-      - category-controller
+        - category-controller
       summary: Create a new category
       description: Create a new category with the specified details.
       operationId: createCategory
       requestBody:
-        description: Details of the new category
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/CategoryCreateDto"
         required: true
       responses:
+        "400":
+          description: Invalid input
         "201":
           description: Category created successfully
           content:
             application/json: {}
-        "400":
-          description: Invalid input
+  /api/v1/products/most-popular-products:
+    get:
+      tags:
+        - product-controller
+      operationId: getMostPopularProducts
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductReportProjection"
   /api/v1/products/category/{categoryId}:
     get:
       tags:
-      - product-controller
+        - product-controller
       summary: Get products by category
       description: Retrieve a list of products in a specific category.
       operationId: getProductByCategory
       parameters:
-      - name: categoryId
-        in: path
-        description: Unique identifier of the category
-        required: true
-        schema:
-          type: string
+        - name: categoryId
+          in: path
+          description: Unique identifier of the category
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         "200":
           description: Products found
@@ -243,16 +394,78 @@ paths:
                 $ref: "#/components/schemas/ProductDetailsDto"
         "404":
           description: No products found for category
+  /api/v1/orders/{orderId}:
+    get:
+      tags:
+        - order-controller
+      operationId: getOrderById
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OrderDto"
+  /api/v1/cosmo-cats/email:
+    get:
+      tags:
+        - cosmo-cat-controller
+      operationId: getCosmoCatByEmail
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CosmoCatDto"
+  /api/v1/orders/{orderId}/entries/{productId}:
+    delete:
+      tags:
+        - order-controller
+      operationId: deleteEntryFromOrder
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/OrderDto"
 components:
   schemas:
     ProductDetailsDto:
       required:
-      - categoryId
-      - description
-      - name
-      - price
-      - productId
-      - stockQuantity
+        - categoryId
+        - description
+        - name
+        - price
+        - productId
+        - stockQuantity
       type: object
       properties:
         productId:
@@ -270,6 +483,7 @@ components:
           type: string
         categoryId:
           type: string
+          format: uuid
         price:
           minimum: 0.0
           exclusiveMinimum: true
@@ -280,14 +494,42 @@ components:
         sku:
           pattern: ^(\w|\s|-|_)+$
           type: string
+    CosmoCatDto:
+      required:
+        - address
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: "CosmoCat's name, must be non-blank and up to 50 characters."
+        email:
+          type: string
+          description: CosmoCat's email address
+        phoneNumber:
+          pattern: "^\\(\\d{3}\\) \\d{3}-\\d{4}$"
+          type: string
+          description: "CosmoCat's phone number, must match format '(123) 456-7890'"
+        address:
+          maxLength: 200
+          minLength: 0
+          type: string
+          description: "CosmoCat's address, must be non-blank and up to 200 characters."
     CategoryDto:
       required:
-      - categoryId
-      - name
+        - categoryId
+        - name
       type: object
       properties:
         categoryId:
           type: string
+          format: uuid
         name:
           maxLength: 100
           minLength: 0
@@ -298,11 +540,11 @@ components:
           type: string
     ProductCreateDto:
       required:
-      - categoryId
-      - description
-      - name
-      - price
-      - stockQuantity
+        - categoryId
+        - description
+        - name
+        - price
+        - stockQuantity
       type: object
       properties:
         name:
@@ -321,6 +563,7 @@ components:
         categoryId:
           type: string
           description: Unique identifier of the category the product belongs to.
+          format: uuid
           example: 123e4567-e89b-12d3-a456-426614174000
         price:
           minimum: 0.0
@@ -342,9 +585,84 @@ components:
           example: GALAXY-STAR-001
     ApiResponse:
       type: object
+    OrderCreateDto:
+      required:
+        - cosmoCatId
+        - entriesList
+      type: object
+      properties:
+        cosmoCatId:
+          type: string
+          format: uuid
+        entriesList:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderEntryCreateDto"
+    OrderEntryCreateDto:
+      required:
+        - productId
+        - quantity
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        quantity:
+          minimum: 1
+          type: integer
+          format: int32
+    OrderDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        cosmoCatId:
+          type: string
+          format: uuid
+        entriesList:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderEntryDto"
+    OrderEntryDto:
+      type: object
+      properties:
+        productId:
+          type: string
+          format: uuid
+        productName:
+          type: string
+        productPrice:
+          type: number
+        quantity:
+          type: integer
+          format: int32
+    CosmoCatCreateDto:
+      required:
+        - address
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: "CosmoCat's name, must be non-blank and up to 50 characters."
+        email:
+          type: string
+          description: CosmoCat's email address
+        phoneNumber:
+          pattern: "^\\(\\d{3}\\) \\d{3}-\\d{4}$"
+          type: string
+          description: "CosmoCat's phone number, must match format '(123) 456-7890'"
+        address:
+          maxLength: 200
+          minLength: 0
+          type: string
+          description: "CosmoCat's address, must be non-blank and up to 200 characters."
     CategoryCreateDto:
       required:
-      - name
+        - name
       type: object
       properties:
         name:
@@ -360,3 +678,11 @@ components:
           type: string
           description: A brief description of the category
           example: Products related to space exploration
+    ProductReportProjection:
+      type: object
+      properties:
+        name:
+          type: string
+        orderCount:
+          type: integer
+          format: int32
