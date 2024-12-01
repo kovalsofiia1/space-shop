@@ -20,9 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import static java.lang.Math.log;
 
 @Slf4j
 @Service
@@ -108,9 +106,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Optional<List<ProductDetailsDto>> findByCategory(UUID categoryId) {
+    public List<ProductDetailsDto> findByCategory(UUID categoryId) {
         List<ProductEntity> filteredProducts = productRepository.findByCategoryId(categoryId);
-        return Optional.of(productMapper.entityToDtoList(filteredProducts));
+        return productMapper.entityToDtoList(filteredProducts);
     }
 
     public List<ProductReportProjection> getMostPopularProducts() {

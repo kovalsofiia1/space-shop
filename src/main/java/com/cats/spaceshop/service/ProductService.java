@@ -17,6 +17,6 @@ public interface ProductService {
     ProductDetailsDto save(ProductCreateDto product);
     ProductDetailsDto update(ProductDetailsDto product);
     void deleteById(UUID productId);
-    Optional<List<ProductDetailsDto>> findByCategory(UUID categoryId);
+    List<ProductDetailsDto> findByCategory(UUID categoryId);
     List<ProductReportProjection> getMostPopularProducts();
 }

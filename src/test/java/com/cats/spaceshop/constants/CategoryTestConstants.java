@@ -4,9 +4,11 @@ import com.cats.spaceshop.dto.category.CategoryCreateDto;
 import com.cats.spaceshop.dto.category.CategoryDto;
 import com.cats.spaceshop.domain.category.Category;
 
+import java.util.UUID;
+
 public class CategoryTestConstants {
 
-    public static final String CATEGORY_ID = "5";
+    public static final UUID CATEGORY_ID = UUID.randomUUID();
     public static final String CATEGORY_NAME = "Star Beds";
     public static final String CATEGORY_DESCRIPTION = "Beds for cats who love stargazing.";
 

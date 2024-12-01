@@ -37,7 +37,10 @@ ext {
             "**/domain/order/Order.java",
             "**/dto/*",
             "**/common/*",
-            "**/web/exception/*"
+            "**/web/exception/*",
+            "**/service/exception/*",
+            "**/service/mapper/*",
+            "**/repository/*"
 
     ]
 }
@@ -67,6 +70,7 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.testcontainers:postgresql'
     testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:testcontainers'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

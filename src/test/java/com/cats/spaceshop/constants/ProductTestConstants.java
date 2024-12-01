@@ -10,7 +10,7 @@ import java.util.UUID;
 public class ProductTestConstants {
 
     public static final UUID PRODUCT_ID = UUID.fromString("a5acbe53-4caf-43cd-ab5f-f26723f327e0");
-    public static final String CATEGORY_ID = "1";
+    public static final UUID CATEGORY_ID = UUID.randomUUID();
     public static final String PRODUCT_NAME = "Galactic Catnip Whiskers";
     public static final String PRODUCT_DESCRIPTION = "A cosmic product.";
     public static final BigDecimal PRODUCT_PRICE = new BigDecimal(12.99);
@@ -30,7 +30,7 @@ public class ProductTestConstants {
             .productId(PRODUCT_ID)
             .name(PRODUCT_NAME)
             .description(PRODUCT_DESCRIPTION)
-            .categoryId(CATEGORY_ID)
+            .categoryId(CATEGORY_ID.toString())
             .price(PRODUCT_PRICE)
             .stockQuantity(PRODUCT_STOCK_QUANTITY)
             .sku(PRODUCT_SKU)

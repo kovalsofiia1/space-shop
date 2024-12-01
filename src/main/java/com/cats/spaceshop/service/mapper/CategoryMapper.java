@@ -15,6 +15,8 @@ public interface CategoryMapper {
 //    @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")
     CategoryEntity entityToCreateCategory(CategoryCreateDto categoryCreateDto);
 
+    CategoryEntity dtoToEntity(CategoryDto categoryDto);
+
     @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")
     Category toCreateCategory(CategoryCreateDto categoryCreateDto);
 
