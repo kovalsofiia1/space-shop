@@ -2,6 +2,7 @@ package com.cats.spaceshop.service;
 
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
+import com.cats.spaceshop.repository.projection.ProductReportProjection;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,4 +18,5 @@ public interface ProductService {
     ProductDetailsDto update(ProductDetailsDto product);
     void deleteById(UUID productId);
     Optional<List<ProductDetailsDto>> findByCategory(UUID categoryId);
+    List<ProductReportProjection> getMostPopularProducts();
 }

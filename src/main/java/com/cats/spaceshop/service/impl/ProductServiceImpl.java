@@ -4,9 +4,12 @@ import com.cats.spaceshop.domain.product.Product;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import com.cats.spaceshop.repository.CategoryRepository;
+import com.cats.spaceshop.repository.OrderEntryRepository;
+import com.cats.spaceshop.repository.OrderRepository;
 import com.cats.spaceshop.repository.ProductRepository;
 import com.cats.spaceshop.repository.entity.CategoryEntity;
 import com.cats.spaceshop.repository.entity.ProductEntity;
+import com.cats.spaceshop.repository.projection.ProductReportProjection;
 import com.cats.spaceshop.service.ProductService;
 import com.cats.spaceshop.service.exception.CategoryNotFoundException;
 import com.cats.spaceshop.service.exception.ProductNotFoundException;
@@ -27,11 +30,13 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final OrderEntryRepository orderEntryRepository;
     private final ProductMapper productMapper;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, OrderEntryRepository orderEntryRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.orderEntryRepository = orderEntryRepository;
         this.productMapper = productMapper;
     }
 
@@ -106,5 +111,9 @@ public class ProductServiceImpl implements ProductService {
     public Optional<List<ProductDetailsDto>> findByCategory(UUID categoryId) {
         List<ProductEntity> filteredProducts = productRepository.findByCategoryId(categoryId);
         return Optional.of(productMapper.entityToDtoList(filteredProducts));
+    }
+
+    public List<ProductReportProjection> getMostPopularProducts() {
+        return orderEntryRepository.findMostPopularProducts();
     }
 }
