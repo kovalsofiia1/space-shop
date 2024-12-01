@@ -26,7 +26,7 @@ import java.util.UUID;
 
 //@SpringBootTest
 //@AutoConfigureMockMvc
-//@Testcontainers
+@Testcontainers
 @DisplayName("Product Service Tests with Testcontainers")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProductServiceImplIT extends AbstractIt {
