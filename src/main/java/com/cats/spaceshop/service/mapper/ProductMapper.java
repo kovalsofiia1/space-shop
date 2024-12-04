@@ -13,13 +13,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
-    ProductEntity toEntity(ProductCreateDto productCreateDto);
-
     @Mapping(target = "productId", expression = "java(java.util.UUID.randomUUID())") // Generate ID during mapping
     Product toDomain(ProductCreateDto productCreateDto);
-
-    @Mapping(target = "id", source = "productId")
-    ProductEntity toEntity(ProductDetailsDto productDetailsDto);
 
     @Mapping(target = "productId", source = "id")
     @Mapping(target = "categoryId", source = "category.id")
@@ -30,10 +25,4 @@ public interface ProductMapper {
     @Mapping(target = "productId", source = "id")
     @Mapping(target = "categoryId", source = "category.id")
     List<ProductDetailsDto> entityToDtoList(List<ProductEntity> products);
-
-    @Mapping(target = "productId", source = "id")
-    @Mapping(target = "category", source = "category")
-    List<ProductFullDetailsDto> entityToFullDtoList(List<ProductEntity> products);
-
-    List<ProductDetailsDto> toDtoList(List<Product> products);
 }

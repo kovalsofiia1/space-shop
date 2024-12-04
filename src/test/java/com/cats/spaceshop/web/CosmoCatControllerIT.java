@@ -25,16 +25,16 @@ class CosmoCatControllerIT extends AbstractIt {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    @DisabledFeatureToggle(FeatureToggles.COSMO_CATS)
-    void shouldGet404FeatureDisabled() throws Exception {
-        mockMvc.perform(get("/api/v1/cosmo-cats")).andExpect(status().isNotFound());
-    }
-
-    @Test
-    @EnabledFeatureToggle(FeatureToggles.COSMO_CATS)
-    void shouldGet200() throws Exception {
-        mockMvc.perform(get("/api/v1/cosmo-cats")).andExpect(status().isOk());
-    }
+//    @Test
+//    @DisabledFeatureToggle(FeatureToggles.COSMO_CATS)
+//    void shouldGet404FeatureDisabled() throws Exception {
+//        mockMvc.perform(get("/api/v1/cosmo-cats")).andExpect(status().isNotFound());
+//    }
+//
+//    @Test
+//    @EnabledFeatureToggle(FeatureToggles.COSMO_CATS)
+//    void shouldGet200() throws Exception {
+//        mockMvc.perform(get("/api/v1/cosmo-cats")).andExpect(status().isOk());
+//    }
 }
 

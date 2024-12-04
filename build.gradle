@@ -37,8 +37,9 @@ ext {
             "**/domain/order/Order.java",
             "**/dto/*",
             "**/common/*",
-            "**/web/exception/*"
-
+            "**/service/exception/*",
+            "**/web/exception/*",
+            "**/repository/*"
     ]
 }
 

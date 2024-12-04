@@ -3,14 +3,17 @@ package com.cats.spaceshop.constants;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import com.cats.spaceshop.domain.product.Product;
+import com.cats.spaceshop.repository.entity.ProductEntity;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import static com.cats.spaceshop.constants.CategoryTestConstants.CATEGORY_ENTITY;
+
 public class ProductTestConstants {
 
     public static final UUID PRODUCT_ID = UUID.fromString("a5acbe53-4caf-43cd-ab5f-f26723f327e0");
-    public static final String CATEGORY_ID = "1";
+    public static final UUID CATEGORY_ID = UUID.randomUUID();
     public static final String PRODUCT_NAME = "Galactic Catnip Whiskers";
     public static final String PRODUCT_DESCRIPTION = "A cosmic product.";
     public static final BigDecimal PRODUCT_PRICE = new BigDecimal(12.99);
@@ -41,6 +44,16 @@ public class ProductTestConstants {
             .name(PRODUCT_NAME)
             .description(PRODUCT_DESCRIPTION)
             .categoryId(CATEGORY_ID)
+            .price(PRODUCT_PRICE)
+            .stockQuantity(PRODUCT_STOCK_QUANTITY)
+            .sku(PRODUCT_SKU)
+            .build();
+
+    public static final ProductEntity PRODUCT_ENTITY = ProductEntity.builder()
+            .id(PRODUCT_ID)
+            .name(PRODUCT_NAME)
+            .description(PRODUCT_DESCRIPTION)
+            .category(CATEGORY_ENTITY)
             .price(PRODUCT_PRICE)
             .stockQuantity(PRODUCT_STOCK_QUANTITY)
             .sku(PRODUCT_SKU)

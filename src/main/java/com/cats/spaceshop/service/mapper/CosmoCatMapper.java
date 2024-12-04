@@ -13,9 +13,6 @@ public interface CosmoCatMapper {
 
     CustomerEntity creationDtoToEntity(CosmoCatCreateDto creationDto);
 
-    @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID())")
-    CosmoCatDto creationDtoToDto(CosmoCatCreateDto creationDto);
-
     CosmoCatDto entityToDto(CustomerEntity customerEntity);
 
     List<CosmoCatDto> entitiesToDtos(List<CustomerEntity> customerEntities);

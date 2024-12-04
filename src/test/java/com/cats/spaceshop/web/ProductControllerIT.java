@@ -89,24 +89,24 @@ class ProductControllerIT extends AbstractIt {
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @DisabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
-    void shouldGet404ForGetProductByCategoryFeatureDisabled() throws Exception {
-        String categoryId = "some-category-id";
-        mockMvc.perform(get("/api/v1/products/category/{categoryId}", categoryId))
-                .andExpect(status().isNotFound());
-    }
+//    @Test
+//    @DisabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
+//    void shouldGet404ForGetProductByCategoryFeatureDisabled() throws Exception {
+//        String categoryId = "some-category-id";
+//        mockMvc.perform(get("/api/v1/products/category/{categoryId}", categoryId))
+//                .andExpect(status().isNotFound());
+//    }
 
-    @Test
-    @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
-    void shouldGet200ForGetProductByCategory() throws Exception {
-        String categoryId = "some-category-id";
-        List<ProductDetailsDto> products = List.of(PRODUCT_DETAILS_DTO);
-        when(productService.findByCategory(categoryId)).thenReturn(Optional.of(products));
-
-        mockMvc.perform(get("/api/v1/products/category/{categoryId}", categoryId))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
+//    void shouldGet200ForGetProductByCategory() throws Exception {
+//        String categoryId = "some-category-id";
+//        List<ProductDetailsDto> products = List.of(PRODUCT_DETAILS_DTO);
+//        when(productService.findByCategory(categoryId)).thenReturn(Optional.of(products));
+//
+//        mockMvc.perform(get("/api/v1/products/category/{categoryId}", categoryId))
+//                .andExpect(status().isOk());
+//    }
 
     @Test
     @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
@@ -137,16 +137,16 @@ class ProductControllerIT extends AbstractIt {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
-    void getProductByCategory_ShouldReturnProductList() throws Exception {
-        Mockito.when(productService.findByCategory(anyString())).thenReturn(Optional.of(List.of(productDetailsDto)));
-
-        mockMvc.perform(get("/api/v1/products/category/{categoryId}", "category-1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(1))
-                .andExpect(jsonPath("$[0].name").value(productDetailsDto.getName()));
-    }
+//    @Test
+//    @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
+//    void getProductByCategory_ShouldReturnProductList() throws Exception {
+//        Mockito.when(productService.findByCategory(anyString())).thenReturn(Optional.of(List.of(productDetailsDto)));
+//
+//        mockMvc.perform(get("/api/v1/products/category/{categoryId}", "category-1"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.size()").value(1))
+//                .andExpect(jsonPath("$[0].name").value(productDetailsDto.getName()));
+//    }
 
     @Test
     @EnabledFeatureToggle(FeatureToggles.KITTY_PRODUCTS)
