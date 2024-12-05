@@ -1,122 +1,137 @@
 package com.cats.spaceshop.web;
 
+import com.cats.spaceshop.AbstractIt;
 import com.cats.spaceshop.dto.category.CategoryCreateDto;
 import com.cats.spaceshop.dto.category.CategoryDto;
+import com.cats.spaceshop.repository.CategoryRepository;
+import com.cats.spaceshop.repository.entity.CategoryEntity;
 import com.cats.spaceshop.service.CategoryService;
 import com.cats.spaceshop.service.exception.CategoryNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
+import java.util.UUID;
 
-import static com.cats.spaceshop.constants.CategoryTestConstants.CATEGORY_CREATE_DTO;
-import static com.cats.spaceshop.constants.CategoryTestConstants.CATEGORY_DTO;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static com.cats.spaceshop.constants.CategoryTestConstants.*;
+import static org.mockito.Mockito.reset;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(CategoryController.class)
-class CategoryControllerIT {
+@SpringBootTest
+@AutoConfigureMockMvc
+//@Testcontainers
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DisplayName("Category Controller Integration Test with Real Database")
+public class CategoryControllerIT extends AbstractIt {
+
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ObjectMapper objectMapper;
 
     @Autowired
-    private MockMvc mockMvc;
+    @SpyBean
+    private CategoryRepository categoryRepository;
 
-    @MockBean
+    @Autowired
+    @SpyBean
     private CategoryService categoryService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private CategoryDto categoryDto;
     private CategoryCreateDto categoryCreateDto;
+    private CategoryEntity categoryEntity;
 
     @BeforeEach
     void setUp() {
+        reset(categoryService);
+
         categoryDto = CATEGORY_DTO;
-        categoryCreateDto = CATEGORY_CREATE_DTO;}
+        categoryCreateDto = CATEGORY_CREATE_DTO;
+        categoryEntity = CATEGORY_ENTITY;
 
-//    @Test
-//    void getAllCategories_ShouldReturnListOfCategories() throws Exception {
-//        Mockito.when(categoryService.findAll()).thenReturn(Arrays.asList(categoryDto));
-//
-//        mockMvc.perform(get("/api/v1/categories")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.size()").value(1))
-//                .andExpect(jsonPath("$[0].categoryId").value(CATEGORY_DTO.getCategoryId()))
-//                .andExpect(jsonPath("$[0].name").value(CATEGORY_DTO.getName()));
-//    }
+        categoryEntity = categoryRepository.save(categoryEntity);
+    }
 
-//    @Test
-//    void getCategory_ShouldReturnCategory_WhenFound() throws Exception {
-//        Mockito.when(categoryService.findById("1")).thenReturn(Optional.of(categoryDto));
-//
-//        mockMvc.perform(get("/api/v1/categories/1")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.categoryId").value(CATEGORY_DTO.getCategoryId()))
-//                .andExpect(jsonPath("$.name").value(CATEGORY_DTO.getName()));
-//    }
-//
-//    @Test
-//    void getCategory_ShouldReturn404_WhenNotFound() throws Exception {
-//        Mockito.when(categoryService.findById("1")).thenReturn(Optional.empty());
-//
-//        mockMvc.perform(get("/api/v1/categories/1")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound());
-//    }
+    @AfterEach
+    void cleanUp(){
+        categoryRepository.deleteAll();
+    }
 
-//    @Test
-//    void createCategory_ShouldReturnCreatedCategory() throws Exception {
-//        Mockito.when(categoryService.save(any(CategoryCreateDto.class))).thenReturn(categoryDto);
-//
-//        mockMvc.perform(post("/api/v1/categories")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(categoryCreateDto)))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.categoryId").value(CATEGORY_DTO.getCategoryId()))
-//                .andExpect(jsonPath("$.name").value(CATEGORY_DTO.getName()));
-//    }
+    @Test
+    void shouldReturnAllCategories() throws Exception {
+        List<CategoryDto> categories = categoryService.findAll();
 
-//    @Test
-//    void updateCategory_ShouldReturnUpdatedCategory() throws Exception {
-//        Mockito.when(categoryService.update(any(CategoryDto.class))).thenReturn(categoryDto);
-//        String id = categoryDto.getCategoryId();
-//        mockMvc.perform(put("/api/v1/categories/" + id)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(categoryDto)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.categoryId").value(CATEGORY_DTO.getCategoryId()))
-//                .andExpect(jsonPath("$.name").value(CATEGORY_DTO.getName()));
-//    }
-//
-//    @Test
-//    void updateCategory_ShouldReturn400_WhenIdMismatch() throws Exception {
-//        String id = categoryDto.getCategoryId();
-//        mockMvc.perform(put("/api/v1/categories/" + id + "1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(CATEGORY_DTO)))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(content().string("Category ID in the request body does not match the path variable."));
-//    }
+        mockMvc.perform(get("/api/v1/categories"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(categories.size()))
+                .andExpect(jsonPath("$[0].categoryId").value(categoryEntity.getId().toString()))
+                .andExpect(jsonPath("$[0].name").value(categoryDto.getName()));
+    }
 
-//    @Test
-//    void deleteCategory_ShouldReturnSuccessMessage() throws Exception {
-//        Mockito.doNothing().when(categoryService).deleteById("1");
-//
-//        mockMvc.perform(delete("/api/v1/categories/1")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(content().string("Category deleted successfully"));
-//    }
+    @Test
+    void shouldReturnCategoryById() throws Exception {
+        UUID categoryId = categoryEntity.getId();
+        CategoryDto categoryFromDb = categoryService.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+
+        mockMvc.perform(get("/api/v1/categories/{id}", categoryId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.categoryId").value(categoryFromDb.getCategoryId().toString()))
+                .andExpect(jsonPath("$.name").value(categoryFromDb.getName()));
+    }
+
+    @Test
+    void shouldReturn404WhenCategoryNotFoundById() throws Exception {
+        UUID nonExistingCategoryId = UUID.randomUUID();
+
+        mockMvc.perform(get("/api/v1/categories/{id}", nonExistingCategoryId))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.detail").value("Category with id " + nonExistingCategoryId + " not found exception"));
+    }
+
+    @Test
+    void shouldCreateCategory() throws Exception {
+        mockMvc.perform(post("/api/v1/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(categoryCreateDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.categoryId").isNotEmpty())
+                .andExpect(jsonPath("$.name").value(categoryCreateDto.getName()));
+    }
+
+    @Test
+    void shouldUpdateCategory() throws Exception {
+        UUID categoryId = categoryEntity.getId();
+        CategoryDto updatedCategoryDto = CategoryDto.builder()
+                .categoryId(categoryId)
+                .name("Updated Space Food")
+                .description(categoryDto.getDescription())
+                .build();
+
+        mockMvc.perform(put("/api/v1/categories/{id}", categoryId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedCategoryDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.categoryId").value(categoryId.toString()))
+                .andExpect(jsonPath("$.name").value("Updated Space Food"));
+    }
+
+    @Test
+    void shouldDeleteCategory() throws Exception {
+        UUID categoryId = categoryEntity.getId();
+
+        mockMvc.perform(delete("/api/v1/categories/{id}", categoryId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Category deleted successfully"));
+
+        boolean exists = categoryRepository.existsById(categoryId);
+        assert !exists;
+    }
 }

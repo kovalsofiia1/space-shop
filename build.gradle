@@ -39,6 +39,7 @@ ext {
             "**/common/*",
             "**/service/exception/*",
             "**/web/exception/*",
+            "**/featureToggle/exception/*",
             "**/repository/*"
     ]
 }
