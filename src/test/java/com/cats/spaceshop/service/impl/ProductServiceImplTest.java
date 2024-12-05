@@ -1,12 +1,13 @@
 package com.cats.spaceshop.service.impl;
 
-import static com.cats.spaceshop.constants.ProductTestConstants.*;
-import static org.junit.jupiter.api.Assertions.*;
-
-
-import com.cats.spaceshop.domain.product.Product;
 import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
+import com.cats.spaceshop.repository.CategoryRepository;
+import com.cats.spaceshop.repository.OrderEntryRepository;
+import com.cats.spaceshop.repository.ProductRepository;
+import com.cats.spaceshop.repository.entity.CategoryEntity;
+import com.cats.spaceshop.repository.entity.ProductEntity;
+import com.cats.spaceshop.service.exception.CategoryNotFoundException;
 import com.cats.spaceshop.service.exception.ProductNotFoundException;
 import com.cats.spaceshop.service.mapper.ProductMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,13 +16,26 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.Mockito.*;
+import static com.cats.spaceshop.constants.CategoryTestConstants.CATEGORY_ENTITY;
+import static com.cats.spaceshop.constants.ProductTestConstants.*;
+import static org.junit.jupiter.api.Assertions.*;
+        import static org.mockito.Mockito.*;
 
 class ProductServiceImplTest {
+
+    @Mock
+    private ProductRepository productRepository;
+
+    @Mock
+    private CategoryRepository categoryRepository;
+
+    @Mock
+    private OrderEntryRepository orderEntryRepository;
 
     @Mock
     private ProductMapper productMapper;
@@ -29,120 +43,127 @@ class ProductServiceImplTest {
     @InjectMocks
     private ProductServiceImpl productService;
 
-    private ProductCreateDto productCreateDto;
-    private Product product;
+    private UUID productId;
+    private ProductEntity productEntity;
     private ProductDetailsDto productDetailsDto;
+    private ProductCreateDto productCreateDto;
+    private CategoryEntity categoryEntity;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
 
+        productEntity = PRODUCT_ENTITY;
         productCreateDto = PRODUCT_CREATE_DTO;
-        product = PRODUCT;
         productDetailsDto = PRODUCT_DETAILS_DTO;
 
-        productService.products.add(product);
+        categoryEntity = CATEGORY_ENTITY;
     }
+
     @Test
-    public void testFindAllProducts() {
-        List<Product> productList = List.of(product);
-        when(productMapper.toDtoList(anyList())).thenReturn(List.of(productDetailsDto));
+    void testFindAll() {
+        when(productRepository.findAll()).thenReturn(List.of(productEntity));
+        when(productMapper.entityToDtoList(anyList())).thenReturn(List.of(productDetailsDto));
 
         List<ProductDetailsDto> result = productService.findAll();
 
         assertEquals(1, result.size());
         assertEquals(productDetailsDto, result.get(0));
-        verify(productMapper, times(1)).toDtoList(anyList());
+        verify(productRepository, times(1)).findAll();
     }
 
     @Test
-    public void testFindProductById() {
-        UUID productId = product.getProductId();
-        when(productMapper.toDtoList(anyList())).thenReturn(List.of(productDetailsDto));
+    void testFindById() {
+        when(productRepository.findById(productId)).thenReturn(Optional.of(productEntity));
+        when(productMapper.entityToDto(productEntity)).thenReturn(productDetailsDto);
 
         Optional<ProductDetailsDto> result = productService.findById(productId);
 
         assertTrue(result.isPresent());
         assertEquals(productDetailsDto, result.get());
-        verify(productMapper, times(1)).toDtoList(anyList());
+        verify(productRepository, times(1)).findById(productId);
     }
 
     @Test
-    public void testFindProductByIdNotFound() {
-        UUID nonExistentId = UUID.randomUUID();
-
-        assertThrows(ProductNotFoundException.class, () -> {
-            productService.findById(nonExistentId);
-        });
-    }
-
-    @Test
-    public void testSaveProduct() {
-        when(productMapper.toEntity(productCreateDto)).thenReturn(product);
-        when(productMapper.toDto(product)).thenReturn(productDetailsDto);
-
-        ProductDetailsDto response = productService.save(productCreateDto);
-
-        assertNotNull(response);
-        assertEquals(productDetailsDto, response);
-        verify(productMapper, times(1)).toEntity(productCreateDto);
-    }
-
-    @Test
-    public void testUpdateProduct() {
-        when(productMapper.toEntity(any(ProductDetailsDto.class))).thenReturn(product);
-        when(productMapper.toDto(any(Product.class))).thenReturn(productDetailsDto);
-
-        ProductDetailsDto response = productService.update(productDetailsDto);
-
-
-        assertNotNull(response);
-        assertEquals(productDetailsDto, response);
-        verify(productMapper, times(1)).toDto(any(Product.class));
-    }
-
-    @Test
-    public void testUpdateNonExistentProduct() {
-        when(productMapper.toEntity(any(ProductCreateDto.class))).thenReturn(product);
-        productService.save(productCreateDto);
-        UUID productId = product.getProductId();
-        productService.deleteById(productId);
-
-        when(productMapper.toEntity(any(ProductDetailsDto.class))).thenReturn(product);
-        when(productMapper.toDto(product)).thenReturn(productDetailsDto);
-
-        ProductNotFoundException thrown = assertThrows(
-                ProductNotFoundException.class,
-                () -> productService.update(productDetailsDto),
-                "Expected ProductNotFoundException for non-existent product"
-        );
-
-        assertEquals("Product with id " + productDetailsDto.getProductId() + " not found exception", thrown.getMessage());
-    }
-
-    @Test
-    public void testDeleteProductById() {
-        when(productMapper.toEntity(any(ProductCreateDto.class))).thenReturn(product);
-        when(productService.save(productCreateDto)).thenReturn(productDetailsDto);
-        ProductDetailsDto created = productService.save(productCreateDto);
-
-        UUID productId = created.getProductId();
-
-        productService.deleteById(productId);
+    void testFindById_NotFound() {
+        when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
         assertThrows(ProductNotFoundException.class, () -> productService.findById(productId));
+        verify(productRepository, times(1)).findById(productId);
     }
 
     @Test
-    public void testFindByCategory() {
-        String categoryId = "1";
-        when(productMapper.toDtoList(anyList())).thenReturn(List.of(productDetailsDto));
+    void testSave() {
+        when(categoryRepository.findById(productCreateDto.getCategoryId())).thenReturn(Optional.of(categoryEntity));
+        when(productRepository.save(any(ProductEntity.class))).thenReturn(productEntity);
+        when(productMapper.entityToDto(any(ProductEntity.class))).thenReturn(productDetailsDto);
 
-        Optional<List<ProductDetailsDto>> result = productService.findByCategory(categoryId);
+        ProductDetailsDto result = productService.save(productCreateDto);
+
+        assertNotNull(result);
+        assertEquals(productDetailsDto, result);
+        verify(categoryRepository, times(1)).findById(productCreateDto.getCategoryId());
+        verify(productRepository, times(1)).save(any(ProductEntity.class));
+    }
+
+    @Test
+    void testSave_CategoryNotFound() {
+        when(categoryRepository.findById(productCreateDto.getCategoryId())).thenReturn(Optional.empty());
+
+        assertThrows(CategoryNotFoundException.class, () -> productService.save(productCreateDto));
+        verify(categoryRepository, times(1)).findById(productCreateDto.getCategoryId());
+    }
+
+    @Test
+    void testUpdate() {
+        when(productRepository.findById(productDetailsDto.getProductId())).thenReturn(Optional.of(productEntity));
+        when(productRepository.save(any(ProductEntity.class))).thenReturn(productEntity);
+        when(productMapper.entityToDto(any(ProductEntity.class))).thenReturn(productDetailsDto);
+        when(categoryRepository.findById(productDetailsDto.getCategoryId())).thenReturn(Optional.of(categoryEntity));
+
+        ProductDetailsDto result = productService.update(productDetailsDto);
+
+        assertNotNull(result);
+        assertEquals(productDetailsDto, result);
+        verify(productRepository, times(1)).findById(productDetailsDto.getProductId());
+    }
+
+    @Test
+    void testUpdate_ProductNotFound() {
+        when(productRepository.findById(productDetailsDto.getProductId())).thenReturn(Optional.empty());
+
+        assertThrows(ProductNotFoundException.class, () -> productService.update(productDetailsDto));
+        verify(productRepository, times(1)).findById(productDetailsDto.getProductId());
+    }
+
+    @Test
+    void testDeleteById() {
+        when(productRepository.existsById(productId)).thenReturn(true);
+
+        productService.deleteById(productId);
+
+        verify(productRepository, times(1)).existsById(productId);
+        verify(productRepository, times(1)).deleteById(productId);
+    }
+
+    @Test
+    void testDeleteById_NotFound() {
+        when(productRepository.existsById(productId)).thenReturn(false);
+
+        assertThrows(ProductNotFoundException.class, () -> productService.deleteById(productId));
+        verify(productRepository, times(1)).existsById(productId);
+    }
+
+    @Test
+    void testFindByCategory() {
+        when(productRepository.findByCategoryId(productCreateDto.getCategoryId())).thenReturn(List.of(productEntity));
+        when(productMapper.entityToDtoList(anyList())).thenReturn(List.of(productDetailsDto));
+
+        Optional<List<ProductDetailsDto>> result = productService.findByCategory(productCreateDto.getCategoryId());
 
         assertTrue(result.isPresent());
         assertEquals(1, result.get().size());
         assertEquals(productDetailsDto, result.get().get(0));
-        verify(productMapper, times(1)).toDtoList(anyList());
+        verify(productRepository, times(1)).findByCategoryId(productCreateDto.getCategoryId());
     }
 }

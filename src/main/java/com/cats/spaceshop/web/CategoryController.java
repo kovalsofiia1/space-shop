@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @Validated
@@ -46,7 +47,7 @@ public class CategoryController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> getCategory(
-            @Parameter(description = "Unique identifier of the category") @PathVariable String id) {
+            @Parameter(description = "Unique identifier of the category") @PathVariable UUID id) {
         return categoryService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
@@ -73,9 +74,8 @@ public class CategoryController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(
-            @Parameter(description = "ID of the category to update") @PathVariable String id,
+            @Parameter(description = "ID of the category to update") @PathVariable UUID id,
             @Valid @org.springframework.web.bind.annotation.RequestBody CategoryDto categoryDto) {
-
         if (!categoryDto.getCategoryId().equals(id)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Category ID in the request body does not match the path variable.");
@@ -93,7 +93,7 @@ public class CategoryController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategory(
-            @Parameter(description = "ID of the category to delete") @PathVariable String id) {
+            @Parameter(description = "ID of the category to delete") @PathVariable UUID id) {
         categoryService.deleteById(id);
         return ResponseEntity.ok("Category deleted successfully");
     }

@@ -35,7 +35,7 @@ public class ProductDetailsDto {
     String description;
 
     @NotNull(message = "Category ID is mandatory")
-    String categoryId;
+    UUID categoryId;
 
     @NotNull(message = "Price is mandatory")
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than zero")

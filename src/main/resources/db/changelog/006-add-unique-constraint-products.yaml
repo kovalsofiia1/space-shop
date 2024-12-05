@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: "006-add-unique-constraint-products"
+      author: "author"
+      changes:
+        - addUniqueConstraint:
+            tableName: "product"
+            columnNames: "name, category_id"
+            constraintName: "uk_product_name_category"

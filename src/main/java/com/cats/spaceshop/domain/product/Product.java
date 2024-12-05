@@ -14,7 +14,7 @@ public class Product {
     UUID productId;
     String name;
     String description;
-    String categoryId;
+    UUID categoryId;
     BigDecimal price;
     int stockQuantity;
     String sku;

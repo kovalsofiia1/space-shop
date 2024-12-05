@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: "004-create-orders-table"
+      author: "author"
+      changes:
+        - createTable:
+            tableName: "order"
+            columns:
+              - column:
+                  name: "id"
+                  type: "UUID"
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: "customer_id"
+                  type: "UUID"
+                  constraints:
+                    nullable: false
+                    foreignKeyName: "fk_order_customer"
+                    references: "customer(id)"
+              - column:
+                  name: "created_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false

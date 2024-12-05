@@ -44,7 +44,7 @@ public class ProductCreateDto {
             example = "123e4567-e89b-12d3-a456-426614174000"
     )
     @NotNull(message = "Category ID is mandatory")
-    String categoryId;
+    UUID categoryId;
 
     @Schema(
             description = "The price of the product, must be greater than zero.",

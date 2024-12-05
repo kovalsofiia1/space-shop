@@ -1,15 +1,14 @@
 package com.cats.spaceshop.web;
 
+import com.cats.spaceshop.dto.cosmocat.CosmoCatCreateDto;
 import com.cats.spaceshop.dto.cosmocat.CosmoCatDto;
-import com.cats.spaceshop.featureToggle.FeatureToggles;
-import com.cats.spaceshop.featureToggle.annotation.FeatureToggle;
 import com.cats.spaceshop.service.CosmoCatService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/cosmo-cats")
@@ -21,10 +20,39 @@ public class CosmoCatController {
         this.cosmoCatService = cosmoCatService;
     }
 
-    @GetMapping
-    @FeatureToggle(FeatureToggles.COSMO_CATS)
+    @GetMapping("")
     public ResponseEntity<List<CosmoCatDto>> getAllCosmoCats() {
         List<CosmoCatDto> cosmoCats = cosmoCatService.getCosmoCats();
         return ResponseEntity.ok(cosmoCats);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CosmoCatDto> getCosmoCatById(@PathVariable UUID id) {
+        CosmoCatDto cosmoCat = cosmoCatService.getCosmoCatById(id);
+        return ResponseEntity.ok(cosmoCat);
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<CosmoCatDto> getCosmoCatByEmail(@RequestParam(required = true) String email) {
+        CosmoCatDto cosmoCat = cosmoCatService.getCosmoCatByEmail(email);
+        return ResponseEntity.ok(cosmoCat);
+    }
+
+    @PostMapping
+    public ResponseEntity<CosmoCatDto> addCosmoCat(@RequestBody @Valid CosmoCatCreateDto cosmoCatDto) {
+        CosmoCatDto createdCosmoCat = cosmoCatService.addCosmoCat(cosmoCatDto);
+        return ResponseEntity.ok(createdCosmoCat);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CosmoCatDto> updateCosmoCat(@PathVariable UUID id, @RequestBody @Valid CosmoCatDto cosmoCatDto) {
+        CosmoCatDto updatedCosmoCat = cosmoCatService.updateCosmoCat(id, cosmoCatDto);
+        return ResponseEntity.ok(updatedCosmoCat);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCosmoCat(@PathVariable UUID id) {
+        cosmoCatService.deleteCosmoCat(id);
+        return ResponseEntity.noContent().build();
     }
 }

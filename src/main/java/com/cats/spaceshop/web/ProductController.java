@@ -4,6 +4,7 @@ import com.cats.spaceshop.dto.product.ProductCreateDto;
 import com.cats.spaceshop.dto.product.ProductDetailsDto;
 import com.cats.spaceshop.featureToggle.FeatureToggles;
 import com.cats.spaceshop.featureToggle.annotation.FeatureToggle;
+import com.cats.spaceshop.repository.projection.ProductReportProjection;
 import com.cats.spaceshop.service.ProductService;
 import com.cats.spaceshop.service.exception.ProductNotFoundException;
 import jakarta.validation.Valid;
@@ -68,7 +69,7 @@ public class ProductController {
     @GetMapping("category/{categoryId}")
     @FeatureToggle(FeatureToggles.KITTY_PRODUCTS)
     public ResponseEntity<List<ProductDetailsDto>> getProductByCategory(
-            @Parameter(description = "Unique identifier of the category") @PathVariable String categoryId) {
+            @Parameter(description = "Unique identifier of the category") @PathVariable UUID categoryId) {
         List<ProductDetailsDto> products = productService.findByCategory(categoryId).orElse(Collections.emptyList());
         return ResponseEntity.ok(products);
     }
@@ -122,5 +123,10 @@ public class ProductController {
             @Parameter(description = "ID of the product to delete") @PathVariable UUID id) {
         productService.deleteById(id);
         return ResponseEntity.ok("Product deleted successfully");
+    }
+
+    @GetMapping("/most-popular-products")
+    public List<ProductReportProjection> getMostPopularProducts() {
+        return productService.getMostPopularProducts();
     }
 }
