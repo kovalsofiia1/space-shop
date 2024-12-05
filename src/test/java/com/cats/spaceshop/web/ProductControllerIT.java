@@ -29,11 +29,12 @@ import static com.cats.spaceshop.constants.ProductTestConstants.*;
 import static org.mockito.Mockito.reset;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-//@Testcontainers
+@Testcontainers
 @DisplayName("Product Controller Integration Test with Real Database")
 public class ProductControllerIT extends AbstractIt {
 

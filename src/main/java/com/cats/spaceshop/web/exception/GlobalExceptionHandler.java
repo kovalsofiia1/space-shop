@@ -72,6 +72,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problemDetail);
     }
 
+    @ExceptionHandler(CosmoCatNotFoundByEmailException.class)
+    public ResponseEntity<ProblemDetail> handleCosmoCatNotFoundByEmail(CosmoCatNotFoundByEmailException ex, WebRequest request) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problemDetail.setTitle("CosmoCat Not Found With such email");
+        problemDetail.setDetail(ex.getMessage());
+        problemDetail.setInstance(URI.create(request.getDescription(false).substring(4)));
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problemDetail);
+    }
+
     @ExceptionHandler(CosmoCatWithEmailAlreadyExistsException.class)
     public ResponseEntity<ProblemDetail> handleCosmoCatExists(CosmoCatWithEmailAlreadyExistsException ex, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);

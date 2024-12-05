@@ -25,10 +25,11 @@ import static com.cats.spaceshop.constants.CategoryTestConstants.*;
 import static org.mockito.Mockito.reset;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-//@Testcontainers
+@Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Category Controller Integration Test with Real Database")
 public class CategoryControllerIT extends AbstractIt {

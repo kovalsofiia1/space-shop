@@ -3,6 +3,7 @@ package com.cats.spaceshop.web;
 import com.cats.spaceshop.dto.cosmocat.CosmoCatCreateDto;
 import com.cats.spaceshop.dto.cosmocat.CosmoCatDto;
 import com.cats.spaceshop.service.CosmoCatService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,13 +39,13 @@ public class CosmoCatController {
     }
 
     @PostMapping
-    public ResponseEntity<CosmoCatDto> addCosmoCat(@RequestBody CosmoCatCreateDto cosmoCatDto) {
+    public ResponseEntity<CosmoCatDto> addCosmoCat(@RequestBody @Valid CosmoCatCreateDto cosmoCatDto) {
         CosmoCatDto createdCosmoCat = cosmoCatService.addCosmoCat(cosmoCatDto);
         return ResponseEntity.ok(createdCosmoCat);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CosmoCatDto> updateCosmoCat(@PathVariable UUID id, @RequestBody CosmoCatDto cosmoCatDto) {
+    public ResponseEntity<CosmoCatDto> updateCosmoCat(@PathVariable UUID id, @RequestBody @Valid CosmoCatDto cosmoCatDto) {
         CosmoCatDto updatedCosmoCat = cosmoCatService.updateCosmoCat(id, cosmoCatDto);
         return ResponseEntity.ok(updatedCosmoCat);
     }
