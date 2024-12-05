@@ -11,3 +11,5 @@ databaseChangeLog:
       file: "db/changelog/005-create-order-entries-table.yaml"
   - include:
       file: "db/changelog/006-add-unique-constraint-products.yaml"
+  - include:
+      file: "db/changelog/007-add-product-name-index.yaml"

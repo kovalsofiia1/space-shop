@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new CategoryNotFoundException(productCreateDto.getCategoryId()));
 
         ProductEntity product = ProductEntity.builder()
-                .category(category)  // Встановлюємо знайдену категорію
+                .category(category)
                 .name(productCreateDto.getName())
                 .description(productCreateDto.getDescription())
                 .price(productCreateDto.getPrice())

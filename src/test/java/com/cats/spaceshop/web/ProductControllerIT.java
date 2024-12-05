@@ -275,7 +275,7 @@ public class ProductControllerIT extends AbstractIt {
                 .category(categoryEntity)
                 .price(BigDecimal.valueOf(10.00))
                 .stockQuantity(100)
-                .sku("GALAXY-STAR-001")
+                .sku("GCW-001")
                 .build();
 
         productEntity = productRepository.save(productEntity);
@@ -287,7 +287,7 @@ public class ProductControllerIT extends AbstractIt {
                 .categoryId(categoryEntity.getId())
                 .price(BigDecimal.valueOf(10.00))
                 .stockQuantity(100)
-                .sku("GALAXY-STAR-001")
+                .sku("GCW-001")
                 .build();
 
         productCreateDto = ProductCreateDto.builder()
@@ -296,7 +296,7 @@ public class ProductControllerIT extends AbstractIt {
                 .categoryId(categoryEntity.getId())
                 .price(BigDecimal.valueOf(10.00))
                 .stockQuantity(100)
-                .sku("GALAXY-STAR-001")
+                .sku("GCW-001")
                 .build();
     }
 
@@ -348,16 +348,6 @@ public class ProductControllerIT extends AbstractIt {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail").value("Product with id " + nonExistingProductId + " not found exception"));
     }
-
-//    @Test
-//    void shouldCreateProduct() throws Exception {
-//        mockMvc.perform(post("/api/v1/products")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(productCreateDto)))
-//                .andExpect(status().isCreated())
-//                .andExpect(jsonPath("$.productId").isNotEmpty())
-//                .andExpect(jsonPath("$.name").value(productCreateDto.getName()));
-//    }
 
     @Test
     void shouldUpdateProduct() throws Exception {
